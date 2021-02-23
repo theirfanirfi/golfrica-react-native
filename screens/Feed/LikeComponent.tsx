@@ -19,23 +19,24 @@ export default class LikeComponent extends React.Component {
 
     async componentDidMount() {
         const { status } = await this.props;
-        console.log(status.isLiked)
         this.setState({
+            status: status,
             likes: this.toInt(status.status_sm_likes) + this.toInt(status.total_likes),
             isLiked: status.isLiked == 0 || status.isLiked == null ? false : true,
         })
     }
 
-    // static getDerivedStateFromProps(props, current_state) {
-    //     if (current_state.like != (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes))) {
-    //         return {
-    //             likes: (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes)),
-    //             isLiked: props.status.isLiked == 0 || props.status.isLiked == null ? false : true,
+    static getDerivedStateFromProps(props, current_state) {
+        if (current_state.status != props.status) {
+            return {
+                status: props.status,
+                likes: (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes)),
+                isLiked: props.status.isLiked == 0 || props.status.isLiked == null ? false : true,
 
-    //         };
+            };
 
-    //     }
-    // }
+        }
+    }
 
     showErrorAlert = msg => {
         this.props.showAlert('error', msg);

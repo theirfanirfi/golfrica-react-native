@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, FlatList, TouchableOpacity, Image, View, Text, Alert } from 'react-native';
-import CountriesListView from '../components/CountriesListView';
 import Colors from '../../constants/Colors';
-import { Avatar, Card, IconButton, Title, Paragraph } from 'react-native-paper';
+import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { AirbnbRating } from 'react-native-ratings';
 import { getFollowersForFollowersScreens, followUser } from '../../apis';
-
+import { getProfileImage } from '../shared/utils'
 export default class FollowersList extends React.PureComponent {
     state = {
         image: 'https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg',
@@ -92,7 +90,7 @@ export default class FollowersList extends React.PureComponent {
                                 <Card style={{ padding: 6, justifyContent: 'center' }} >
                                     <Card.Title
                                         title={this.renderTitle(item)}
-                                        left={(props) => <Image source={{ uri: this.state.image }} style={styles.userImage} />}
+                                        left={(props) => <Image source={{ uri: getProfileImage('user', item.profile_image) }} style={styles.userImage} />}
                                         right={(props) => this.renderFollowIcon(item)}
                                     />
                                 </Card>

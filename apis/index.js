@@ -1,4 +1,4 @@
-const endpoint = "http://192.168.10.6:5000"
+const endpoint = "http://192.168.10.8:5000"
 // const endpoint = "http://127.0.0.1:5000"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

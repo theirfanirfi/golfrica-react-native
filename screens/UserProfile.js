@@ -127,7 +127,7 @@ export default class UserProfile extends Component {
                 <ImageBackground
                     style={styles.headerBackgroundImage}
                     blurRadius={10}
-                    source={cover_image}
+                    source={{ uri: getProfileImage('user', this.state.user.cover_image) }}
                 >
                     <View style={styles.headerColumn}>
                         <Image

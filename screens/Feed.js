@@ -23,7 +23,7 @@ export default class Feed extends React.Component {
     };
 
     async fetchStatuses() {
-        const statuses = await get(this, 'statuses/?offest=' + this.state.offset);
+        const statuses = await get(this, 'statuses/?offest=0');
         if (statuses.status) {
             const res = statuses.response
             this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false });
@@ -35,13 +35,10 @@ export default class Feed extends React.Component {
 
     async componentDidMount() {
         this.props.navigation.addListener('focus', async () => {
-            this.setState({ isRefreshing: true, offset: 0, }, () => this.fetchStatuses())
+            this.setState({ isRefreshing: true }, () => this.fetchStatuses())
         })
 
         this.fetchStatuses()
-
-
-
     }
 
     actionCallBack = (action, msg) => {
@@ -50,7 +47,7 @@ export default class Feed extends React.Component {
 
     onRefresh = async () => {
         this.setState({ isRefreshing: true });
-        const statuses = await get(this, 'statuses/?offest=' + this.state.offset);
+        const statuses = await get(this, 'statuses/?offest=0');
         if (statuses.status) {
             const res = statuses.response
             this.setState({ statuses: null });
@@ -97,7 +94,8 @@ export default class Feed extends React.Component {
         if (status.is_club_status == 1) {
             return getProfileImage('clubs', status.club_profile_pic)
         } else if (status.is_app_status == 1) {
-            return getProfileImage('user', status.profile_image)
+            console.log(status)
+            return getProfileImage('user', status.club_profile_pic)
         } else if (status.is_player_status == 1) {
             return getProfileImage('player', status.player_profile_pic)
         }

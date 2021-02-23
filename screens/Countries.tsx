@@ -40,7 +40,7 @@ export default class Countries extends React.Component {
 
                             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, }}>{item.country_name}</Text>
 
-                            <TabBarIcon style={{ position: 'absolute', right: 18, top: 22 }} name="ios-arrow-forward" color='white' />
+                            <Icon style={{ position: 'absolute', right: 18, top: 22 }} name="arrow-right" color='white' />
                         </TouchableOpacity>
 
                     }
