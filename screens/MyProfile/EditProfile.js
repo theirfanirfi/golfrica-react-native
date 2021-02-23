@@ -15,10 +15,12 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Alert
+    Alert,
+    PermissionsAndroid,
 } from "react-native";
 import { get } from "../../apis/";
-const cover_image = require('../images/golfcover.jpg');
+import RBSheet from "react-native-raw-bottom-sheet";
+
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#FFF",
@@ -114,6 +116,7 @@ export default class EditProfile extends Component {
         cover_image_upload: null,
         profile_image: null,
         profile_image_upload: null,
+        change_image_selection: 'profile'
     }
 
     removeValue = async () => {
@@ -132,38 +135,108 @@ export default class EditProfile extends Component {
         console.log('Done.')
     }
 
-    async chooseImage(action) {
+    requestExternalWritePermission = async () => {
+        if (Platform.OS === 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                    {
+                        title: 'External Storage Write Permission',
+                        message: 'App needs write permission',
+                    },
+                );
+                // If WRITE_EXTERNAL_STORAGE Permission is granted
+                return granted === PermissionsAndroid.RESULTS.GRANTED;
+            } catch (err) {
+                console.warn(err);
+                alert('Write permission err', err);
+            }
+            return false;
+        } else { return true };
+    };
+
+    requestCameraPermission = async () => {
+        if (Platform.OS === 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.CAMERA,
+                    {
+                        title: 'Camera Permission',
+                        message: 'App needs camera permission',
+                    },
+                );
+                // If CAMERA Permission is granted
+                return granted === PermissionsAndroid.RESULTS.GRANTED;
+            } catch (err) {
+                console.warn(err);
+                return false;
+            }
+        } else { return true };
+    };
+
+    async launchImageLibrary() {
+        let granted = await this.requestExternalWritePermission();
         // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync(writeOnly);
         //    console.log(status);
-        // if (status !== 'granted') {
-        //   console.log()
-        //   alert('Sorry, we need camera roll permissions to make this work!');
-        // }else {
-        let result = await ImagePicker.launchImageLibrary({
-            mediaTypes: 'photos',
-            allowsEditing: true,
+        if (!granted) {
+            alert('Permissions were denied.');
+        } else {
+            let result = await ImagePicker.launchImageLibrary({
+                mediaType: 'photo',
+                quality: 1,
+            }, (response) => {
+                if (!response.didCancel) {
+                    let image = {
+                        name: response.fileName,
+                        uri: response.uri,
+                        type: response.type,
+                        height: response.height,
+                        width: response.width
+                    };
 
-            aspect: [4, 3],
-            quality: 1,
-        });
+
+                    if (this.state.change_image_selection == 'profile') {
+                        this.setState({ profile_image: response.uri, profile_image_upload: image });
+                    } else if (this.state.change_image_selection == 'cover') {
+                        this.setState({ cover_image: response.uri, cover_image_upload: image });
+
+                    }
+                }
+
+            });
+        }
+    }
 
 
-        if (!result.cancelled) {
+    async launchCamera() {
+        let granted = await this.requestCameraPermission();
+        // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync(writeOnly);
+        //    console.log(status);
+        if (!granted) {
+            alert('Permissions were denied.');
+        } else {
+            let result = await ImagePicker.launchCamera({
+                mediaType: 'photo',
+                quality: 1,
+            }, (response) => {
+                if (!response.didCancel) {
+                    let image = {
+                        name: response.fileName,
+                        uri: response.uri,
+                        type: response.type,
+                        height: response.height,
+                        width: response.width
+                    };
 
-            let image = {
-                name: 'photo.jpg',
-                uri: result.uri,
-                type: 'image',
-                height: result.height,
-                width: result.width
-            };
-            if (action == 'profile') {
-                this.setState({ profile_image: result.uri, profile_image_upload: image });
-            } else if (action == 'cover') {
-                this.setState({ cover_image: result.uri, cover_image_upload: image });
+                    if (this.state.change_image_selection == 'profile') {
+                        this.setState({ profile_image: response.uri, profile_image_upload: image });
+                    } else if (this.state.change_image_selection == 'cover') {
+                        this.setState({ cover_image: response.uri, cover_image_upload: image });
 
-            }
+                    }
+                }
 
+            });
         }
     }
 
@@ -232,7 +305,7 @@ export default class EditProfile extends Component {
                     source={{ uri: this.state.cover_image == null ? this.getUserCoverImage() : this.state.cover_image }}
                 >
                     <TouchableOpacity
-                        onPress={() => this.chooseImage('cover')}
+                        onPress={() => this.setState({ change_image_selection: 'cover' }, () => this.RBSheet.open())}
                         style={{
                             position: 'absolute',
                             top: 8, alignSelf: 'center',
@@ -251,7 +324,7 @@ export default class EditProfile extends Component {
                             s
                         />
                         <TouchableOpacity
-                            onPress={() => this.chooseImage('profile')}
+                            onPress={() => { this.setState({ change_image_selection: 'profile' }, () => this.RBSheet.open()) }}
                             style={{
                                 position: 'absolute',
                                 top: '35%', alignSelf: 'center',
@@ -336,13 +409,52 @@ export default class EditProfile extends Component {
 
     render() {
         return (
-            <ScrollView style={styles.scroll}>
-                <View style={styles.container}>
-                    <Card containerStyle={styles.cardContainer}>
-                        {this.renderHeader()}
-                    </Card>
-                </View>
-            </ScrollView>
+            <>
+                <ScrollView style={styles.scroll}>
+                    <View style={styles.container}>
+                        <Card containerStyle={styles.cardContainer}>
+                            {this.renderHeader()}
+                        </Card>
+                    </View>
+                </ScrollView>
+
+                <RBSheet
+                    ref={ref => {
+                        this.RBSheet = ref;
+                    }}
+                    height={160}
+                    openDuration={250}
+                    customStyles={{
+                        container: {
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start', alignItems: 'flex-start',
+                            padding: 12
+                        }}>
+                        <TouchableOpacity
+                            onPress={() => this.launchCamera()}
+                            style={{
+                                flexDirection: 'row', justifyContent: 'flex-start',
+                            }}>
+                            <Icon name='camera' color='black' size={25} style={{ alignSelf: 'flex-start', marginVertical: 12 }} />
+                            <Text style={{ alignSelf: 'flex-start', color: 'black', fontSize: 20, marginVertical: 12, marginLeft: 6 }}>Camera</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => this.launchImageLibrary()}
+                            style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Icon name='image' color='black' size={25} style={{ alignSelf: 'flex-start', marginVertical: 12 }} />
+                            <Text style={{ alignSelf: 'flex-start', fontSize: 20, marginVertical: 12, marginLeft: 6 }}>Gallery</Text>
+                        </TouchableOpacity>
+                    </View>
+                </RBSheet>
+            </>
         );
     }
 }

@@ -230,7 +230,7 @@ export default class CreateStatus extends React.Component {
           ref={ref => {
             this.RBSheet = ref;
           }}
-          height={300}
+          height={160}
           openDuration={250}
           customStyles={{
             container: {

@@ -13,13 +13,12 @@ import {
     ActivityIndicator
 } from 'react-native'
 import { Icon } from 'react-native-elements'
-import { updateClubDescription, getClubDescriptions, endpoint } from '../../apis/';
+import { updateClubDescription, getClubDescriptions } from '../../apis/';
 import base64 from 'react-native-base64';
 import * as ImagePicker from 'react-native-image-picker';
 import ImageComponent from '../CreateStatus/ImageComponent'
 import { DescriptionImagesFlatList } from './ClubDescriptionComponents.js'
 import RBSheet from "react-native-raw-bottom-sheet";
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default class EditDescription extends React.Component {
 
