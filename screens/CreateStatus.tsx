@@ -10,7 +10,6 @@ import * as ImagePicker from 'react-native-image-picker';
 import ImageComponent from './CreateStatus/ImageComponent'
 import { uploadUnPublishedStatusPicture } from '../apis';
 import RBSheet from "react-native-raw-bottom-sheet";
-import Colors from '../constants/Colors';
 
 export default class CreateStatus extends React.Component {
 
@@ -62,10 +61,6 @@ export default class CreateStatus extends React.Component {
       }
     } else { return true };
   };
-
-  imageOptions() {
-
-  }
 
   async launchImageLibrary() {
     let granted = await this.requestExternalWritePermission();
