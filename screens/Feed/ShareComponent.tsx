@@ -31,7 +31,7 @@ export default class ShareComponent extends React.PureComponent {
             <View style={styles.socialBarSection}>
                 <TouchableOpacity style={styles.socialBarButton}>
                     <TabBarIcon size={20} name='share' color='gray' />
-                    <Text style={styles.socialBarLabel}> 25</Text>
+                    <Text style={styles.socialBarLabel}> {this.props.status.total_swaps}</Text>
                 </TouchableOpacity>
             </View>
         );

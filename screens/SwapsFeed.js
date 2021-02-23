@@ -45,8 +45,12 @@ export default class SwapsFeed extends React.Component {
 
         }
     }
-    async componentDidMount() {
-        await this.fetchSwaps();
+    componentDidMount() {
+
+        this.props.navigation.addListener('focus', () => {
+            this.setState({ isRefreshing: true }, () => this.fetchSwaps())
+        })
+        this.fetchSwaps();
     }
 
     actionCallBack = (action, msg) => {

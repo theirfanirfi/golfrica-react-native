@@ -10,6 +10,7 @@ import CarouselComponent from './Feed/CarouselComponent.js';
 import DropdownAlert from 'react-native-dropdownalert';
 import { getProfileImage } from './shared/utils.js'
 export default class Feed extends React.Component {
+
     state = {
         dialogVisibility: false,
         isLoggedIn: false,
@@ -21,7 +22,7 @@ export default class Feed extends React.Component {
         token: null,
     };
 
-    async componentDidMount() {
+    async fetchStatuses() {
         const statuses = await get(this, 'statuses/?offest=' + this.state.offset);
         if (statuses.status) {
             const res = statuses.response
@@ -30,6 +31,16 @@ export default class Feed extends React.Component {
         } else {
             this.setState({ isRefreshing: false, isLoading: false })
         }
+    }
+
+    async componentDidMount() {
+        this.props.navigation.addListener('focus', async () => {
+            this.setState({ isRefreshing: true, offset: 0, }, () => this.fetchStatuses())
+        })
+
+        this.fetchStatuses()
+
+
 
     }
 
@@ -90,6 +101,10 @@ export default class Feed extends React.Component {
         } else if (status.is_player_status == 1) {
             return getProfileImage('player', status.player_profile_pic)
         }
+    }
+
+    componentWillUnmount() {
+        // this.props.navigation.removeEventListener('focus')
     }
 
 

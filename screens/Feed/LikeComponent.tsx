@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import TabBarIcon from '../../components/TabBarIcon';
 import { likeStatus } from '../../apis/';
 
-export default class LikeComponent extends React.PureComponent {
+export default class LikeComponent extends React.Component {
     state = {
         token: null,
         likes: 0,
@@ -19,22 +19,23 @@ export default class LikeComponent extends React.PureComponent {
 
     async componentDidMount() {
         const { status } = await this.props;
+        console.log(status.isLiked)
         this.setState({
             likes: this.toInt(status.status_sm_likes) + this.toInt(status.total_likes),
-            isLiked: true
+            isLiked: status.isLiked == 0 || status.isLiked == null ? false : true,
         })
     }
 
-    static getDerivedStateFromProps(props, current_state) {
-        if (current_state.like != (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes))) {
-            return {
-                likes: (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes)),
-                isLiked: true
-            };
+    // static getDerivedStateFromProps(props, current_state) {
+    //     if (current_state.like != (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes))) {
+    //         return {
+    //             likes: (parseInt(props.status.status_sm_likes) + parseInt(props.status.total_likes)),
+    //             isLiked: props.status.isLiked == 0 || props.status.isLiked == null ? false : true,
 
-        }
-        return null
-    }
+    //         };
+
+    //     }
+    // }
 
     showErrorAlert = msg => {
         this.props.showAlert('error', msg);
@@ -49,13 +50,14 @@ export default class LikeComponent extends React.PureComponent {
         }
     }
 
-    likeStatus = async () => {
+    async likeStatus() {
         const like = await likeStatus(this, this.props.token, this.props.status.status_id);
+        console.log(like.response.isLiked);
         if (like.response.isLiked) {
             this.setState({
-                likes: parseInt(this.state.likes) + 1,
+                likes: this.state.likes + 1,
                 isLiked: true,
-            })
+            }, () => { console.log(this.state.likes + " : " + this.state.isLiked) })
         } else {
             this.showErrorAlert(like.response.message);
         }
@@ -70,7 +72,7 @@ export default class LikeComponent extends React.PureComponent {
         return (
             <View style={styles.socialBarSection}>
                 <TouchableOpacity style={styles.socialBarButton} onPress={() => this.likeStatus()}>
-                    <TabBarIcon size={20} name='heart' color={this.getHeartColor()} />
+                    <TabBarIcon size={20} name='heart' color={this.state.isLiked ? 'red' : 'gray'} />
                     <Text style={styles.socialBarLabel}> {this.state.likes}</Text>
                 </TouchableOpacity>
             </View>

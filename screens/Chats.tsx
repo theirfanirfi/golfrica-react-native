@@ -28,6 +28,9 @@ export default class Chats extends React.Component {
     }
 
     async componentDidMount() {
+        this.props.navigation.addListener('focus', () => {
+            this.setState({ isRefreshing: true }, () => getChatParticipants(this))
+        })
         await getChatParticipants(this);
     }
 
