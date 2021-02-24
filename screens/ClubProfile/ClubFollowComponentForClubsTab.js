@@ -89,9 +89,9 @@ export default class ClubFollowComponentForClubsTab extends React.Component {
     const response = await followClub(this, this.state.club_id);
     if (response.status) {
       const res = response.response;
-      if (res.isFollowed) {
-        this.setState({ is_followed: true })
-        Alert.alert('Club Followed.');
+      if (!res.isError) {
+        this.setState({ is_followed: res.isFollowed })
+        Alert.alert(res.message);
       } else {
         Alert.alert(res.message);
       }

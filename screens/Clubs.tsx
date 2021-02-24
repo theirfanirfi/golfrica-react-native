@@ -24,7 +24,7 @@ export default class Clubs extends React.Component {
         this.props.navigation.navigate('SingleClub', { club_id: id });
     }
     fetchClubs = async (country_id) => {
-        let res = await get(this, `clubs/country_clubs/${country_id}`);
+        let res = await get(this, `clubs/country_clubs/${country_id}/`);
         if (res.status) {
             this.setState({
                 country_id: country_id,

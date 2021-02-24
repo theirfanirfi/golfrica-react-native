@@ -300,15 +300,6 @@ function ChatNavigator() {
       headerTintColor: 'white',
       headerTitleStyle: { color: 'white' },
       headerStyle: { backgroundColor: Colors.green.greencolor },
-
-      headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 24, }}>
-          <Icon name='comment' size={25} color='white' />
-
-          <Badge value="99+" status="warning" containerStyle={{ position: 'absolute', top: 4, right: 8 }} />
-
-        </TouchableOpacity>
-      )
     }}>
 
       <Stack.Screen

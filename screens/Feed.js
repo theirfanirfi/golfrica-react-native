@@ -71,7 +71,7 @@ export default class Feed extends React.Component {
         // }
     }
     getMoreTen = async () => {
-        await this.setState({ offset: this.state.offset += 1 })
+        await this.setState({ offset: this.state.offset += 1 });
         const statuses = await get(this, 'statuses/?offset=' + this.state.offset);
         if (statuses.status) {
             const res = statuses.response

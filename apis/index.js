@@ -727,7 +727,7 @@ export const get = async (context, pUrl) => {
   await getToken(context);
   console.log(context.state.token)
   try {
-    const url = `${endpoint}/${pUrl}/`
+    const url = `${endpoint}/${pUrl}`
     const response = await fetch(url, {
       method: "GET",
       headers: {

@@ -13,11 +13,24 @@ export default class Countries extends React.Component {
         isLoading: true,
     }
 
+    getCountries() {
+        this.setState({ isRefreshing: true, isLoading: true, }, async () => {
+            let response = await get(this, 'countries/')
+            if (response.status) {
+                console.log(response)
+                this.setState({ countries: response.response.countries, isLoading: false })
+            }
+        })
+    }
+
     async componentDidMount() {
-        let response = await get(this, 'countries')
-        if (response.status) {
-            this.setState({ countries: response.response.countries, isLoading: false })
-        }
+        this.props.navigation.addListener('focus', () => {
+            this.getCountries()
+        })
+
+        this.getCountries();
+
+
     }
 
     render() {
