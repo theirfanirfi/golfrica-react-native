@@ -9,6 +9,7 @@ import SwapBtnComponent from './Feed/SwapBtnComponent';
 import CarouselComponent from './Feed/CarouselComponent.js';
 import DropdownAlert from 'react-native-dropdownalert';
 import { getProfileImage } from './shared/utils.js'
+import axios from 'react-native-axios'
 export default class Feed extends React.Component {
 
     state = {
@@ -20,13 +21,21 @@ export default class Feed extends React.Component {
         isLoading: true,
         offset: 0,
         token: null,
+        extraData: true,
     };
 
     async fetchStatuses() {
-        const statuses = await get(this, 'statuses/?offest=0');
+        const ms = Date.now();
+        console.log("before: " + this.state.statuses.length)
+        const statuses = await get(this, 'statuses/?offset=0&ms=' + ms);
         if (statuses.status) {
             const res = statuses.response
-            this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false });
+            console.log(res);
+            this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false, extraData: !this.state.extraData }, () => {
+                console.log(this.state.statuses)
+                console.log("after: " + this.state.statuses.length)
+
+            });
 
         } else {
             this.setState({ isRefreshing: false, isLoading: false })
@@ -34,9 +43,11 @@ export default class Feed extends React.Component {
     }
 
     async componentDidMount() {
-        this.props.navigation.addListener('focus', async () => {
-            this.setState({ isRefreshing: true }, () => this.fetchStatuses())
-        })
+        // this.props.navigation.addListener('focus', async () => {
+        //     this.setState({ isRefreshing: true }, () => this.fetchStatuses())
+        // })
+
+
 
         this.fetchStatuses()
     }
@@ -46,24 +57,25 @@ export default class Feed extends React.Component {
     }
 
     onRefresh = async () => {
-        this.setState({ isRefreshing: true });
-        const statuses = await get(this, 'statuses/?offest=0');
-        if (statuses.status) {
-            const res = statuses.response
-            this.setState({ statuses: null });
-            this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false });
+        this.setState({ isRefreshing: true }, () => this.fetchStatuses());
+        // const ms = Date.now();
+        // const statuses = await get(this, 'statuses/?offest=0&ms=' + ms);
+        // if (statuses.status) {
+        //     const res = statuses.response
+        //     // this.setState({ statuses: null });
+        //     this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false });
 
-        } else {
-            this.setState({ isRefreshing: false, isLoading: false })
+        // } else {
+        //     this.setState({ isRefreshing: false, isLoading: false })
 
-        }
+        // }
     }
     getMoreTen = async () => {
         await this.setState({ offset: this.state.offset += 1 })
-        const statuses = await get(this, 'statuses/?offest=' + this.state.offset);
+        const statuses = await get(this, 'statuses/?offset=' + this.state.offset);
         if (statuses.status) {
             const res = statuses.response
-            this.setState({ statuses: this.state.statuses.concat(res.statuses) });
+            this.setState({ statuses: this.state.statuses.concat(res.statuses), extraData: !this.state.extraData });
         } else {
             this.setState({ isRefreshing: false, isLoading: false })
         }
@@ -121,6 +133,7 @@ export default class Feed extends React.Component {
 
                 <FlatList style={styles.list}
                     data={this.state.statuses}
+                    extraData={this.state.extraData}
                     keyExtractor={(item) => {
                         // console.log(item)
                         return item.status_id != null ? item.status_id : "0";

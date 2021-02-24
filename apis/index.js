@@ -1,7 +1,7 @@
 const endpoint = "http://192.168.10.8:5000"
 // const endpoint = "http://127.0.0.1:5000"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'react-native-axios'
 export const getEndPointUrl = () => {
   return endpoint
 }
@@ -725,12 +725,16 @@ export const sendChatMessage = async (context, form) => {
 
 export const get = async (context, pUrl) => {
   await getToken(context);
+  console.log(context.state.token)
   try {
     const url = `${endpoint}/${pUrl}/`
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        'Authorization': context.state.token
+        'Authorization': context.state.token,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': 0
       }
     });
     const responseJson = await response.json()

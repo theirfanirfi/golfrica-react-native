@@ -23,6 +23,7 @@
     "react-native": "0.63.4",
     "react-native-androw": "^0.0.34",
     "react-native-autolink": "^3.0.0",
+    "react-native-axios": "^0.17.1",
     "react-native-base64": "^0.2.1",
     "react-native-button": "^3.0.1",
     "react-native-cards": "^1.1.4",
