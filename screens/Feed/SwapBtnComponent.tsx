@@ -71,7 +71,16 @@ export default class SwapBtnComponent extends React.PureComponent {
                                     this.sendSwapStatusRequest();
                                 }
                             }}>
-                                <TabBarIcon size={24} name={this.getSwapIcon(3)} color={Colors.green.greencolor} />
+                                {this.state.status.isMine == 1 ? (
+                                    <>
+                                        <TabBarIcon size={24} name='trash' color='red' />
+                                    </>
+                                ) : (
+                                        <>
+                                            <TabBarIcon size={24} name={this.getSwapIcon(3)} color={Colors.green.greencolor} />
+
+                                        </>
+                                    )}
                             </TouchableOpacity>
                         </>
                     )}
