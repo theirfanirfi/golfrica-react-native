@@ -144,7 +144,6 @@ export default class CreateStatus extends React.Component {
     const response = await uploadUnPublishedStatusPicture(this, form);
     if (response.status) {
       const res = response.response;
-      console.log(res);
       if (res.isStatusPosted) {
         this.setState({ status_images: [], status_text: null, imagesListVisibility: false, isUploading: false }, () => {
           Alert.alert('Status Posted');

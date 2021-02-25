@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from 'react-native-elements'
+import { Alert } from 'react-native'
 import { get } from '../../apis'
 
 export class ApproveButton extends React.PureComponent {
@@ -29,7 +30,7 @@ export class ApproveButton extends React.PureComponent {
     }
 
     async approve() {
-        let response = await get(this, `swap/approve/${this.state.swap.swap_id}`)
+        let response = await get(this, `swap/approve/${this.state.swap.swap_id}/`)
         if (response.status) {
             let res = response.response
             if (res.isSwapApproved) {

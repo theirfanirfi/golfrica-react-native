@@ -26,7 +26,6 @@ export default class ClubFeed extends React.Component {
         const { club_id } = await this.props.route.params
         await this.setState({ club_id: club_id });
         const statuses = await getClubStatuses(this, club_id);
-        console.log(statuses)
         if (statuses.status) {
             const res = statuses.response
             this.setState({ statuses: res.statuses, isRefreshing: false });
@@ -118,7 +117,7 @@ export default class ClubFeed extends React.Component {
                                         <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         <ShareComponent status={status} />
-                                        <SwapBtnComponent status={status} showAlert={this.actionCallBack} />
+                                        <SwapBtnComponent status={status} is_club={true} navigation={this.props.navigation} showAlert={this.actionCallBack} />
                                     </View>
                                 </View>
                             </View>

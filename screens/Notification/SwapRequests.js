@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, Image, View, Text, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Image, View, Text, ActivityIndicator, Alert, Platform } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Card } from 'react-native-paper';
 import { getSwapNotifications, get } from '../../apis'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'react-native-elements'
-import { getProfileImage } from '../shared/utils'
+import { getProfileImage, getMoment } from '../shared/utils'
 import { ApproveButton, DeclineButton } from './SwapNotificationActionButtons'
 export default class SwapRequests extends React.Component {
     state = {
@@ -34,24 +33,35 @@ export default class SwapRequests extends React.Component {
 
     renderTitle(item) {
         return (
-            <>
-                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.first_name + ' ' + item.last_name}</Text>
-            </>
+
+            <Text
+                style={{ fontSize: 14, marginBottom: 20, fontWeight: 'bold' }}
+            >
+                {item.first_name + ' ' + item.last_name}
+            </Text>
         )
+    }
+
+    getPlatformMargin() {
+        if (Platform.OS == "android") {
+            return -12
+        } else if (Platform.OS == "ios") {
+            return 8
+        }
     }
 
     renderContent(item) {
         return (
-            <View>
-                <Text style={{ fontSize: 12, color: 'gray' }}>wants to swap a status with you.</Text>
-                <Text style={{ fontSize: 10, color: 'darkgray', marginTop: 8 }}>{item.created_at}</Text>
-            </View>
+            <Text style={{ fontSize: 14, color: 'gray', marginVertical: 12 }}>wants to swap a status with you.</Text>
         )
     }
 
     renderNotificationIcon() {
         return (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
+            <View style={{
+                flex: 1, flexDirection: 'row', justifyContent: 'center',
+                alignContent: 'center', alignItems: 'center'
+            }}>
                 <Icon name="check" color={Colors.green.greencolor} size={25} style={{ marginRight: 12 }} />
                 <Icon name="trash" color='red' size={25} style={{ marginRight: 12 }} />
             </View>
@@ -61,16 +71,30 @@ export default class SwapRequests extends React.Component {
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{ justifyContent: 'center', flexDirection: 'column', flex: 1, alignContent: 'center' }}>
-                    <ActivityIndicator size="large" color="green" style={{ alignSelf: 'center' }} />
+                <View style={{
+                    padding: 24,
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignContent: 'center'
+                }}>
+                    <ActivityIndicator size="large" color="green" style={{ alignSelf: 'center', marginTop: 30 }} />
                 </View>
             )
         }
 
         if (this.state.isNotFound) {
             return (
-                <View style={{ width: '100%', height: '100%', backgroundColor: 'white', justifyContent: 'center', flexDirection: 'column', flex: 1, alignContent: 'center' }}>
-                    <Text style={{ alignSelf: 'center', fontSize: 18 }}>No Notification for you at the moment</Text>
+                <View style={{
+                    width: '100%', height: '100%', backgroundColor: 'white',
+                    justifyContent: 'center', flexDirection: 'column', flex: 1,
+                    alignContent: 'center'
+                }}>
+                    <Text
+                        style={{ alignSelf: 'center', fontSize: 18 }}
+                    >
+                        No Notification for you at the moment
+                        </Text>
                 </View>
             )
         }
@@ -84,7 +108,8 @@ export default class SwapRequests extends React.Component {
                         const notification = item.item
                         console.log(notification)
                         return (
-                            <TouchableOpacity style={{ margin: 4 }} onPress={() => { this.props.navigation.navigate('SingleFeed', { status_id: notification.status_id }) }}>
+                            <TouchableOpacity style={{ margin: 4 }}
+                                onPress={() => { this.props.navigation.navigate('SingleFeed', { status_id: notification.status_id }) }}>
                                 <Card >
                                     <Card.Title
                                         title={this.renderTitle(notification)}
@@ -92,9 +117,16 @@ export default class SwapRequests extends React.Component {
                                         left={(props) => <Image source={{ uri: getProfileImage('user', notification.profile_image) }} style={styles.userImage} />}
                                     // right={(props) => this.renderNotificationIcon()}
                                     />
-                                    <Card.Actions style={{ justifyContent: 'flex-end' }}>
-                                        <ApproveButton swap={notification} />
-                                        <DeclineButton swap={notification} />
+                                    <Card.Actions style={{ justifyContent: 'space-between' }}>
+                                        <View>
+                                            <Text style={{ fontSize: 12, color: 'darkgray', marginTop: 8 }}>{getMoment(notification.created_at)}</Text>
+
+                                        </View>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <ApproveButton swap={notification} />
+                                            <DeclineButton swap={notification} />
+                                        </View>
+
                                     </Card.Actions>
                                 </Card>
                             </TouchableOpacity>

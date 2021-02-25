@@ -34,7 +34,7 @@ export default class SingleFeed extends React.Component {
     loadStatus = async (status_id: number) => {
         const status = await getSingleStatus(this, status_id);
         // console.log(status.response.comments.comments)
-
+        console.log(status)
         if (status.status) {
             this.setState({ status: status.response.status[0], comments: status.response.comments.comments, isRefreshing: false });
         } else {

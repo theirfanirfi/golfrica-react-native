@@ -20,8 +20,7 @@ import CarouselComponent from './Feed/CarouselComponent.js';
 
 import DropdownAlert from 'react-native-dropdownalert';
 
-import { getProfileImage, getTimeDifference } from './shared/utils.js'
-
+import { getProfileImage, getMoment } from './shared/utils.js'
 
 export default class SwapsFeed extends React.Component {
     state = {
@@ -36,7 +35,7 @@ export default class SwapsFeed extends React.Component {
     };
 
     async fetchSwaps() {
-        const statuses = await get(this, 'swap/?offset=' + this.state.offset);
+        const statuses = await get(this, 'swap/?offset=0');
         if (statuses.status) {
             const res = statuses.response
             this.setState({ statuses: res, isRefreshing: false, isLoading: false });
@@ -163,7 +162,7 @@ export default class SwapsFeed extends React.Component {
                 <FlatList style={styles.list}
                     data={this.state.statuses}
                     keyExtractor={(item) => {
-                        return item.index;
+                        return item.status_id;
                     }}
                     refreshing={this.state.isRefreshing}
                     onRefresh={() => this.onRefresh()}
@@ -176,12 +175,11 @@ export default class SwapsFeed extends React.Component {
                     onEndReached={this.getMoreTen}
                     renderItem={(item) => {
                         const status = item.item;
-
                         return (
-                            <View style={styles.card} >
+                            <View style={styles.card} key={status.status_id}>
                                 <View style={{ flexDirection: 'column', justifyContent: 'center', marginTop: 12 }}>
                                     {this.getSwapWithOrSwapBy(status)}
-                                    <Text style={{ alignSelf: 'center', color: 'gray' }}>{parseInt(status.timer / 60) + ' hours ago'}</Text>
+                                    <Text style={{ alignSelf: 'center', color: 'gray' }}>{getMoment(status.updated_at)}</Text>
                                 </View>
                                 <View style={styles.cardHeader}>
                                     <View>
@@ -203,7 +201,7 @@ export default class SwapsFeed extends React.Component {
                                         <RatingStarsComponent status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                            <Text style={styles.time}>{getTimeDifference(status.created_at)}</Text>
+                                            <Text style={styles.time}>{getMoment(status.created_at)}</Text>
                                         </View>
 
 

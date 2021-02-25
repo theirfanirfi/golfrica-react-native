@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, FlatList, Image, TouchableHighlight, Text, View } from 'react-native';
+import { StyleSheet, FlatList, Image, Text, View, Platform, TouchableOpacity } from 'react-native';
 import Colors from '../constants/Colors';
-
-import { AirbnbRating } from 'react-native-ratings';
 import { Icon } from 'react-native-material-ui';
-import { getClubs, get } from '../apis/';
+import { get } from '../apis/';
 import ClubRatingComponent from './ClubProfile/ClubRatingComponent';
 import ClubFollowComponentForClubsTab from './ClubProfile/ClubFollowComponentForClubsTab';
+import { getProfileImage } from './shared/utils'
 
 
 export default class Clubs extends React.Component {
@@ -47,7 +46,7 @@ export default class Clubs extends React.Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: 'white' }}>
+            <View style={{ backgroundColor: 'white', height: '100%' }}>
                 {/* <ImageHeaderScrollView
                     maxHeight={150}
                     minHeight={150}
@@ -60,52 +59,59 @@ export default class Clubs extends React.Component {
                 /> */}
 
                 <FlatList
-                    style={{ height: '78%', width: '100%' }}
+                    style={{ width: '100%' }}
                     data={this.state.clubs}
                     refreshing={this.state.isRefreshing}
                     onRefresh={() => this.onRefresh()}
                     keyExtractor={(item) => { return item.club_id; }}
-                    renderItem={({ item }) => (
-                        <View style={{
-                            flex: 1, shadowColor: 'black', shadowOpacity: 0.3, padding: 10, borderRadius: 20,
-                            flexDirection: 'row', alignItems: 'center', elevation: 3, alignContents: 'center',
-                            marginHorizontal: 8, marginVertical: 8,
-                        }}>
+                    renderItem={({ item }) => {
+                        return (
 
-                            <View style={{ flexDirection: 'column' }}>
-                                <TouchableHighlight style={{ alignSelf: 'flex-start' }} onPress={() => this.goToClub(item.club_id)}>
-                                    <Image style={styles.image} source={{ uri: this.state.image }} />
-                                </TouchableHighlight>
-                            </View>
+                            <View style={{
+                                flex: 1, shadowColor: 'black', shadowOpacity: 0.3, borderWidth: Platform.OS == "ios" ? 0.5 : 0, borderColor: 'darkgray', padding: 10, borderRadius: 2,
+                                flexDirection: 'row', alignItems: 'center', elevation: 3, alignContents: 'center',
+                                marginHorizontal: 8, marginVertical: 8,
+                            }}>
+
+                                <View style={{ flexDirection: 'column' }}>
+                                    <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => this.goToClub(item.club_id)}>
+                                        <Image
+                                            style={styles.image}
+                                            source={
+                                                { uri: item.club_profile_pic == null ? this.state.image : getProfileImage('club', item.club_profile_pic) }
+                                            } />
+                                    </TouchableOpacity>
+                                </View>
 
 
-                            <View style={{ flexDirection: 'column', marginHorizontal: 10 }}>
-                                <TouchableHighlight style={{ alignSelf: 'stretch' }} onPress={() => this.goToClub(item.club_id)}>
-                                    <Text style={styles.title}>{item.club_name}</Text>
-                                </TouchableHighlight>
+                                <View style={{ flexDirection: 'column', marginHorizontal: 10 }}>
+                                    <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={() => this.goToClub(item.club_id)}>
+                                        <Text style={styles.title}>{item.club_name}</Text>
+                                    </TouchableOpacity>
 
-                                <ClubRatingComponent avg_rating={item.avg_rating} club_id={item.club_id} />
+                                    <ClubRatingComponent avg_rating={item.avg_rating} club_id={item.club_id} />
 
-                                <Text onPress={() => this.goToClub(1)}>{item.total_reviews} Reviews</Text>
+                                    <Text onPress={() => this.goToClub(1)}>{item.total_reviews} Reviews</Text>
 
-                                <View style={{ alignSelf: 'flex-start', flexDirection: 'row', marginTop: 6 }}>
-                                    <Icon name="people-outline" />
-                                    <Text style={{ marginTop: 2 }}> {item.followers}</Text>
+                                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', marginTop: 6 }}>
+                                        <Icon name="people-outline" />
+                                        <Text style={{ marginTop: 2 }}> {item.followers}</Text>
+
+                                    </View>
 
                                 </View>
 
+                                <View style={{
+                                    flexDirection: 'row', alignSelf: 'stretch',
+                                    justifyContent: 'space-evenly', alignItems: 'center', marginLeft: 40
+                                }}>
+
+                                    <ClubFollowComponentForClubsTab club_id={item.club_id} is_followed={item.is_followed} />
+                                </View>
+
                             </View>
-
-                            <View style={{
-                                flexDirection: 'row', alignSelf: 'stretch',
-                                justifyContent: 'space-evenly', alignItems: 'center', marginLeft: 40
-                            }}>
-
-                                <ClubFollowComponentForClubsTab club_id={item.club_id} is_followed={item.is_followed} />
-                            </View>
-
-                        </View>
-                    )
+                        )
+                    }
                     }
                 />
 

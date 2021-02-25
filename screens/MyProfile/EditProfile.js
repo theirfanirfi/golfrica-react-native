@@ -266,7 +266,7 @@ export default class EditProfile extends Component {
     }
 
     async componentDidMount() {
-        const response = await get(this, 'user/my_profile');
+        const response = await get(this, 'user/my_profile/');
         console.log(response)
         if (response.status) {
             this.setState({

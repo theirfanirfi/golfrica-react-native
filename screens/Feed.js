@@ -8,8 +8,7 @@ import RatingStarsComponent from './Feed/RatingStarsComponent';
 import SwapBtnComponent from './Feed/SwapBtnComponent';
 import CarouselComponent from './Feed/CarouselComponent.js';
 import DropdownAlert from 'react-native-dropdownalert';
-import { getProfileImage } from './shared/utils.js'
-import axios from 'react-native-axios'
+import { getProfileImage, getMoment } from './shared/utils.js'
 export default class Feed extends React.Component {
 
     state = {
@@ -30,9 +29,7 @@ export default class Feed extends React.Component {
         const statuses = await get(this, 'statuses/?offset=0&ms=' + ms);
         if (statuses.status) {
             const res = statuses.response
-            console.log(res);
             this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false, extraData: !this.state.extraData }, () => {
-                console.log(this.state.statuses)
                 console.log("after: " + this.state.statuses.length)
 
             });
@@ -106,7 +103,6 @@ export default class Feed extends React.Component {
         if (status.is_club_status == 1) {
             return getProfileImage('clubs', status.club_profile_pic)
         } else if (status.is_app_status == 1) {
-            console.log(status)
             return getProfileImage('user', status.club_profile_pic)
         } else if (status.is_player_status == 1) {
             return getProfileImage('player', status.player_profile_pic)
@@ -173,7 +169,7 @@ export default class Feed extends React.Component {
                                         <RatingStarsComponent status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                            <Text style={styles.time}>{status.created_at}</Text>
+                                            <Text style={styles.time}>{getMoment(status.created_at)}</Text>
                                         </View>
 
 

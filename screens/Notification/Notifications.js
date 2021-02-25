@@ -4,7 +4,6 @@ import Colors from '../../constants/Colors';
 import { Card } from 'react-native-paper';
 import { getSwapNotifications, get } from '../../apis'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'react-native-elements'
 import { getProfileImage } from '../shared/utils'
 import { ApproveButton, DeclineButton } from './SwapNotificationActionButtons'
 export default class SwapRequests extends React.Component {

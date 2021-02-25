@@ -18,7 +18,7 @@ export default class Bell extends React.Component {
     }
 
     async componentDidMount() {
-        const response = await get(this, 'notification/notification_count')
+        const response = await get(this, 'notification/notification_count/')
         if (response.status) {
             console.log(response)
             this.setState({ count: response.response.notifications_count })

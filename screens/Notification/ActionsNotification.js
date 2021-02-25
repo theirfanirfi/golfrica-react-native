@@ -4,9 +4,7 @@ import Colors from '../../constants/Colors';
 import { Card } from 'react-native-paper';
 import { get } from '../../apis'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'react-native-elements'
 import { getProfileImage } from '../shared/utils'
-import { ApproveButton, DeclineButton } from './SwapNotificationActionButtons'
 export default class ActionsNotification extends React.Component {
     state = {
         token: null,
@@ -16,7 +14,7 @@ export default class ActionsNotification extends React.Component {
     }
 
     async componentDidMount() {
-        const response = await get(this, 'notification');
+        const response = await get(this, 'notification/');
         if (response.status) {
             const res = response.response;
             console.log(res);
@@ -43,14 +41,11 @@ export default class ActionsNotification extends React.Component {
 
     renderContent(item) {
         return (
-            <View>
-                <Text style={{ fontSize: 12, color: 'gray' }}>
-                    {item.is_like == 1 && ' Liked your status'}
-                    {item.is_review == 1 && ' Reviewed your status'}
-                    {item.is_share == 1 && ' Shared your status'}
-                </Text>
-                <Text style={{ fontSize: 10, color: 'darkgray', marginTop: 8 }}>{item.created_at}</Text>
-            </View>
+            <Text style={{ fontSize: 15, color: 'gray', }}>
+                {item.is_like == 1 && 'Liked your status'}
+                {item.is_review == 1 && 'Reviewed your status'}
+                {item.is_share == 1 && 'Shared your status'}
+            </Text>
         )
     }
 
@@ -97,6 +92,11 @@ export default class ActionsNotification extends React.Component {
                                         left={(props) => <Image source={{ uri: getProfileImage('user', notification.profile_image) }} style={styles.userImage} />}
                                     // right={(props) => this.renderNotificationIcon()}
                                     />
+
+                                    <Card.Actions>
+                                        <Text style={{ fontSize: 12, color: 'darkgray' }}>{item.created_at}</Text>
+
+                                    </Card.Actions>
                                 </Card>
                             </TouchableOpacity>
                         )

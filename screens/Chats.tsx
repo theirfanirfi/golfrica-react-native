@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, Text, View, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Text, View, Image, Platform } from 'react-native';
 import Colors from '../constants/Colors';
 import { Badge } from 'react-native-elements'
 import { getChatParticipants } from '../apis/';
@@ -21,7 +21,7 @@ export default class Chats extends React.Component {
         } else {
             id = chat.chat_initiater_id
         }
-        console.log(id);
+
         if (id > 0) {
             this.props.navigation.navigate('Chat', { chat_with_id: id });
         }
@@ -70,7 +70,7 @@ export default class Chats extends React.Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: 'white' }}>
+            <View style={{ backgroundColor: 'white', height: '100%' }}>
                 <FlatList
                     style={{ width: '100%' }}
                     data={this.state.participants}
@@ -79,26 +79,35 @@ export default class Chats extends React.Component {
                     keyExtractor={(item) => { return item.p_id; }}
                     renderItem={({ item }) => (
                         <View style={{
-                            flex: 1, shadowColor: 'black', shadowOpacity: 0.3, padding: 10, borderRadius: 20,
+                            flex: 1, shadowColor: 'black', shadowOpacity: 0.3, padding: 10, borderRadius: 2,
                             flexDirection: 'row', elevation: 3,
-                            marginHorizontal: 8, marginVertical: 8
+                            marginHorizontal: 8, marginVertical: 8,
+                            borderColor: 'darkgray',
+                            borderWidth: Platform.OS == "ios" ? 0.3 : 0
                         }}>
 
                             <View style={{ flexDirection: 'column' }}>
-                                <TouchableHighlight style={{ alignSelf: 'flex-start' }} onPress={() => this.goToChat(item)}>
+                                <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => this.goToChat(item)}>
                                     <Image style={styles.image} source={{ uri: this.getProfilePicture(item) }} />
-                                </TouchableHighlight>
+                                </TouchableOpacity>
                             </View>
 
 
                             <View style={{ flexDirection: 'column', marginHorizontal: 10 }}>
-                                <TouchableHighlight style={{ alignSelf: 'stretch' }} onPress={() => this.goToChat(item)}>
+                                <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={() => this.goToChat(item)}>
                                     <Text style={styles.title}>{this.getUserName(item)}</Text>
-                                </TouchableHighlight>
+                                </TouchableOpacity>
 
 
-                                <Text style={{ color: 'gray' }} onPress={() => this.goToChat(item.p_id)}>{this.getLastMessage(item)}</Text>
-                                <Badge value={item.unread_msgs} status="warning" containerStyle={{ alignSelf: 'flex-end', marginLeft: 250 }} />
+                                <Text
+                                    style={{ color: 'gray' }}
+                                    onPress={() => this.goToChat(item.p_id)}
+                                >{this.getLastMessage(item)}
+                                </Text>
+                                <Badge
+                                    value={item.unread_msgs}
+                                    status="warning"
+                                    containerStyle={{ alignSelf: 'flex-end', marginLeft: 250 }} />
 
                             </View>
 
