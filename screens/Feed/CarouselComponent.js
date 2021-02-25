@@ -69,6 +69,7 @@ export default class CarouselComponent extends React.PureComponent {
             }
 
         }
+        return null;
     }
 
 

@@ -30,6 +30,7 @@ export default class SwapBtnComponent extends React.PureComponent {
                 status: props.status,
             }
         }
+        return null;
     }
 
     showErrorAlert = (type: any, msg: any) => {

@@ -92,8 +92,8 @@ export default class Feed extends React.Component {
             this.props.navigation.navigate('CountryClubs', { screen: 'SingleClub', params: { club_id: status.club_id } });
 
         } else if (status.is_app_status == 1) {
-            // return getEndPointUrl()+'/static/'
-            return ''
+            this.props.navigation.navigate('UserProfile', { user_id: status.user_id });
+
         } else if (status.is_player_status == 1) {
             this.props.navigation.navigate('PlayerProfile', { player_id: status.player_id })
         }

@@ -4,7 +4,7 @@ import Colors from '../../constants/Colors';
 import { Card } from 'react-native-paper';
 import { get } from '../../apis'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getProfileImage } from '../shared/utils'
+import { getProfileImage, getMoment } from '../shared/utils'
 export default class ActionsNotification extends React.Component {
     state = {
         token: null,
@@ -94,8 +94,7 @@ export default class ActionsNotification extends React.Component {
                                     />
 
                                     <Card.Actions>
-                                        <Text style={{ fontSize: 12, color: 'darkgray' }}>{item.created_at}</Text>
-
+                                        <Text style={{ fontSize: 12, color: 'darkgray' }}>{getMoment(notification.created_at)}</Text>
                                     </Card.Actions>
                                 </Card>
                             </TouchableOpacity>

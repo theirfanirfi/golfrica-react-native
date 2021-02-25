@@ -36,6 +36,7 @@ export default class LikeComponent extends React.Component {
             };
 
         }
+        return null;
     }
 
     showErrorAlert = msg => {
