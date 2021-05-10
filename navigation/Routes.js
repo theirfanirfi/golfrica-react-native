@@ -25,6 +25,7 @@ import EditDescription from '../screens/ClubProfile/EditDescription';
 import FollowersList from '../screens/shared/FollowersList';
 import PlayerProfile from '../screens/Players/PlayerProfile';
 import SplashScreen from '../screens/Auth/SplashScreen'
+import PlayersTab from '../screens/PlayersTab'
 
 import Login from '../screens/Auth/Login'
 import Register from '../screens/Auth/Register'
@@ -65,23 +66,29 @@ function BottomNavigation() {
       }}
 
     >
-      <Tab.Screen name="Feed" component={FeedNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <Icon name="home" color='green' size={28} />,
-        }}
-      />
-      <Tab.Screen name="Swaps" component={SwapNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />,
-        }} />
-      <Tab.Screen name="Create" component={CreateStatusNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <Icon name="plus" color='green' size={28} />,
-        }} />
       <Tab.Screen name="Clubs" component={ClubsNavigator}
         options={{
           tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />
         }} />
+
+      <Tab.Screen name="Players" component={playersNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />
+        }} />
+      <Tab.Screen name="News" component={FeedNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Icon name="home" color='green' size={28} />,
+        }}
+      />
+      {/* <Tab.Screen name="Swaps" component={SwapNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />,
+        }} /> */}
+      <Tab.Screen name="Create" component={CreateStatusNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Icon name="plus" color='green' size={28} />,
+        }} />
+
       <Tab.Screen name="Chat" component={ChatNavigator} options={{
         tabBarIcon: ({ color }) => <Icon name="comment" color='green' size={28} />
       }} />
@@ -154,6 +161,60 @@ function FeedNavigator(navigator) {
         name="SingleFeed"
         component={SingleFeed}
         options={{ headerTitle: 'Feed' }}
+      />
+
+      <Stack.Screen
+        name="UserProfile"
+        component={UserProfile}
+        options={({ navigation, route }) => ({
+          headerRight: (props) => {
+            const { user_id } = route.params
+            return (
+              <TouchableOpacity style={{ marginRight: 24, }} onPress={() => navigation.navigate('Chat', { chat_with_id: user_id })}>
+                <Icon name='comments' size={30} color='white' />
+              </TouchableOpacity>
+            )
+          }
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function playersNavigator(navigator) {
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Bell navigation={navigator.navigation} />
+            <Icon
+              onPress={() => {
+                navigator.navigation.navigate('EditProfile')
+              }}
+              name="user-circle-o"
+              color="white"
+              size={30}
+              style={{ marginRight: 14 }}
+            />
+          </View>
+        )
+      }}
+    >
+      <Stack.Screen
+        name="players"
+        component={PlayersTab}
+        options={{
+          headerTitle: 'Players',
+        }}
       />
 
       <Stack.Screen

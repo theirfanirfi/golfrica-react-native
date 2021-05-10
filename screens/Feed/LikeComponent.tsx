@@ -2,13 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import TabBarIcon from '../../components/TabBarIcon';
-import { likeStatus } from '../../apis/';
+import { likeStatus, get } from '../../apis/';
 
 export default class LikeComponent extends React.Component {
     state = {
         token: null,
         likes: 0,
         isLiked: true,
+        user: [],
+        isLoggedIn: false
     }
 
     static = {
@@ -65,6 +67,19 @@ export default class LikeComponent extends React.Component {
         }
     }
 
+    async unlikeStatus() {
+        const like = await get(this, `statuses/unlike_status/${this.props.status.status_id}/`);
+        console.log(like.response.isLiked);
+        if (like.response.isUnLiked) {
+            this.setState({
+                likes: this.state.likes - 1,
+                isLiked: false,
+            }, () => { console.log(this.state.likes + " : " + this.state.isLiked) })
+        } else {
+            this.showErrorAlert(like.response.message);
+        }
+    }
+
     toInt = value => {
         return parseInt(value);
     }
@@ -73,7 +88,7 @@ export default class LikeComponent extends React.Component {
         const status = this.props.status;
         return (
             <View style={styles.socialBarSection}>
-                <TouchableOpacity style={styles.socialBarButton} onPress={() => this.likeStatus()}>
+                <TouchableOpacity style={styles.socialBarButton} onPress={() => this.state.isLiked ? this.unlikeStatus() : this.likeStatus()}>
                     <TabBarIcon size={20} name='heart' color={this.state.isLiked ? 'red' : 'gray'} />
                     <Text style={styles.socialBarLabel}> {this.state.likes}</Text>
                 </TouchableOpacity>

@@ -1,5 +1,5 @@
-const endpoint = "http://192.168.10.5:5000"
-// const endpoint = "http://127.0.0.1:5000"
+// const endpoint = "http://thelekkihub.com/golfrica"
+const endpoint = "http://192.168.10.7:5000"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'react-native-axios'
 export const getEndPointUrl = () => {
@@ -683,7 +683,7 @@ export const getChatWithUser = async (context) => {
     await responseJson.messages.forEach((value, index) => {
       msgs[index].user = JSON.parse(value.user);
     })
-    console.log(msgs)
+
     context.setState({ messages: msgs, participants: responseJson.participants, isRefreshing: false });
     return {
       response: responseJson,

@@ -5,7 +5,7 @@ import LikeComponent from './Feed/LikeComponent';
 import CommentComponent from './Feed/CommentComponent';
 import ShareComponent from './Feed/ShareComponent';
 import RatingStarsComponent from './Feed/RatingStarsComponent';
-import SwapBtnComponent from './Feed/SwapBtnComponent';
+// import SwapBtnComponent from './Feed/SwapBtnComponent';
 import CarouselComponent from './Feed/CarouselComponent.js';
 import DropdownAlert from 'react-native-dropdownalert';
 import { getProfileImage, getMoment } from './shared/utils.js'
@@ -181,12 +181,12 @@ export default class Feed extends React.Component {
                                         <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         <ShareComponent status={status} />
 
-                                        <SwapBtnComponent
+                                        {/* <SwapBtnComponent
                                             navigation={this.props.navigation}
                                             status={status}
                                             is_club={status.is_club_status == 1 ? true : false}
                                             showAlert={this.actionCallBack}
-                                        />
+                                        /> */}
                                     </View>
                                 </View>
                             </View>
