@@ -113,7 +113,7 @@ function FeedNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('EditProfile')
+                navigator.navigation.navigate('News', { screen: 'EditProfile' })
               }}
               name="user-circle-o"
               color="white"
@@ -125,10 +125,10 @@ function FeedNavigator(navigator) {
       }}
     >
       <Stack.Screen
-        name="Feed"
+        name="News"
         component={Feed}
         options={{
-          headerTitle: 'Feed',
+          headerTitle: 'News',
         }}
       />
 
@@ -164,7 +164,7 @@ function FeedNavigator(navigator) {
       />
 
       <Stack.Screen
-        name="UserProfile"
+        name="Player Profile"
         component={UserProfile}
         options={({ navigation, route }) => ({
           headerRight: (props) => {
@@ -198,7 +198,7 @@ function playersNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('EditProfile')
+                navigator.navigation.navigate('News', { screen: 'EditProfile' })
               }}
               name="user-circle-o"
               color="white"
@@ -218,7 +218,7 @@ function playersNavigator(navigator) {
       />
 
       <Stack.Screen
-        name="UserProfile"
+        name="Player Profile"
         component={UserProfile}
         options={({ navigation, route }) => ({
           headerRight: (props) => {

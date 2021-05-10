@@ -1,16 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, Image, View, Text, Alert } from 'react-native';
-import Colors from '../constants/Colors';
-import { Card } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { get, followUser } from '../apis';
-import { getProfileImage } from './shared/utils'
-import FollowUnFollowBtnComponent from '../components/FollowUnFollowBtnComponent'
+import { FlatList, View } from 'react-native';
+import { get } from '../apis';
 import UserPlayerRowComponent from '../components/PlayersTab/UserPlayerRowComponent';
 
 export default class FollowersList extends React.PureComponent {
     state = {
-        image: 'https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg',
         token: null,
         players: [],
         loading: true,
@@ -42,7 +36,7 @@ export default class FollowersList extends React.PureComponent {
                     refreshing={this.state.isRefreshing}
                     onRefresh={() => this.onRefresh()}
                     keyExtractor={(item) => { return item.f_id; }}
-                    renderItem={({ item }) => <UserPlayerRowComponent {...item} />}
+                    renderItem={({ item }) => <UserPlayerRowComponent navigation={this.props.navigation} {...item} />}
                 />
             </View>
         );

@@ -118,8 +118,8 @@ export default class SingleFeed extends React.Component {
                             <View style={styles.socialBarContainer}>
                                 <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                 <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                <ShareComponent status={status} />
-                                <SwapBtnComponent status={status} showAlert={this.actionCallBack} />
+                                {/* <ShareComponent status={status} />
+                                <SwapBtnComponent status={status} showAlert={this.actionCallBack} /> */}
                             </View>
                         </View>
                     </View>

@@ -179,7 +179,7 @@ export default class Feed extends React.Component {
                                     <View style={styles.socialBarContainer}>
                                         <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                        <ShareComponent status={status} />
+                                        {/* <ShareComponent status={status} /> */}
 
                                         {/* <SwapBtnComponent
                                             navigation={this.props.navigation}

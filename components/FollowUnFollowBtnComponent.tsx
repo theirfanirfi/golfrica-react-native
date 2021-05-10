@@ -34,10 +34,20 @@ export default class FollowUnFollowBtnComponent extends React.Component {
             console.log(res);
             if (res.isFollowed) {
                 if (res.message.includes('unfollowed')) {
+                    // if (this.props.actionCallBack != null) {
                     this.props.actionCallback(this.props.context, 'unfollow');
+                    // }
+
+
+
                     this.setState({ is_followed: 0 });
                 } else {
+
+                    // if (this.props.actionCallback != null) {
                     this.props.actionCallback(this.props.context, 'follow');
+                    // }
+
+
                     this.setState({ is_followed: 1 });
                 }
             }

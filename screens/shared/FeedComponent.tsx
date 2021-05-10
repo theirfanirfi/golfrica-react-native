@@ -25,7 +25,6 @@ export default class FeedComponent extends React.Component {
     async componentDidMount() {
         const { id, type } = await this.props
         this.setState({ type: type, id: id });
-
         const statuses = await getFeedComponentStatuses(this, this.state.type, this.state.id);
         if (statuses.status) {
             const res = statuses.response
@@ -36,12 +35,14 @@ export default class FeedComponent extends React.Component {
     }
 
     static getDerivedStateFromProps(props, current_state) {
+        console.log('feed id ' + props.id)
         if (current_state.id != props.id && props.id != undefined) {
             return {
                 id: props.id,
                 type: props.type
             }
         }
+        return null
     }
 
     actionCallBack = (action, msg) => {
@@ -104,7 +105,7 @@ export default class FeedComponent extends React.Component {
                         const status = item.item;
 
                         return (
-                            <View style={styles.card} >
+                            <View style={styles.card} key={item.status_id}>
                                 <View style={styles.cardHeader}>
                                     <View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -131,8 +132,8 @@ export default class FeedComponent extends React.Component {
                                     <View style={styles.socialBarContainer}>
                                         <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                        <ShareComponent status={status} />
-                                        <SwapBtnComponent status={status} showAlert={this.actionCallBack} />
+                                        {/* <ShareComponent status={status} /> */}
+                                        {/* <SwapBtnComponent status={status} showAlert={this.actionCallBack} /> */}
                                     </View>
                                 </View>
                             </View>

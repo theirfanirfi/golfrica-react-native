@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon } from "react-native-elements";
+import { Button, Icon } from "react-native-elements";
 
 import {
     FlatList,
@@ -80,12 +80,12 @@ const styles = StyleSheet.create({
         borderColor: "#FFF",
         borderRadius: 85,
         borderWidth: 3,
-        height: 170,
-        marginBottom: 15,
-        width: 170,
+        height: 100,
+        marginBottom: 0,
+        width: 100,
     },
     userNameText: {
-        color: "#FFF",
+        color: "#000",
         fontSize: 22,
         fontWeight: "bold",
         paddingBottom: 8,
@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
 });
 
 import { getProfileImage } from './shared/utils';
-
+import { CollapsibleHeaderScrollView } from 'react-native-collapsible-header-views'
+import FollowUnFollowBtnComponent from '../components/FollowUnFollowBtnComponent'
 export default class UserProfile extends Component {
 
 
@@ -102,83 +103,41 @@ export default class UserProfile extends Component {
     state = {
         image:
             "https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg",
+        profile: [],
         user: [],
         user_statuses: [],
         token: null,
         isLoggedIn: false,
+        followers: 0
     };
 
     async componentDidMount() {
         const { user_id } = this.props.route.params;
         const response = await getUserProfile(this, user_id);
+        console.log(response)
         if (response.status) {
             const res = response.response;
-
+            let profile = res.user_profile[0]
             this.setState({
-                user: res.user_profile[0],
+                profile: profile,
+                followers: profile.followers,
+
             });
         }
     }
 
+    onFollowUnfollow = (context, action) => {
+        if (action == "follow") {
+            context.setState({ followers: context.state.followers + 1 })
+        } else {
+            if (context.state.followers > 0) {
+                context.setState({ followers: context.state.followers - 1 })
 
-    renderHeader = () => {
-        return (
-            <View style={styles.headerContainer}>
-                <ImageBackground
-                    style={styles.headerBackgroundImage}
-                    blurRadius={10}
-                    source={{ uri: getProfileImage('user', this.state.user.cover_image) }}
-                >
-                    <View style={styles.headerColumn}>
-                        <Image
-                            style={styles.userImage}
-                            source={{ uri: this.getUserProfileImage() }}
-                            s
-                        />
-                        <Text style={styles.userNameText}>
-                            {this.state.user.first_name + ' ' + this.state.user.last_name}
-                        </Text>
+            }
+        }
+    }
 
-                        {/* <Text style={{ marginBottom: 6, color: "white" }}>
-                            {" "}
-                            {this.state.player.total_reviews} reviews{" "}
-                        </Text> */}
 
-                        {/* <PlayerButtonFollowComponent
-                            player_id={this.state.player.player_id}
-                            is_followed={this.state.player.is_followed}
-                        /> */}
-
-                        <View style={styles.userAddressRow}>
-                            <View>
-                                <Icon
-                                    name="place"
-                                    underlayColor="transparent"
-                                    iconStyle={styles.placeIcon}
-                                    onPress={this.onPressPlace}
-                                />
-                            </View>
-                            <View style={styles.userCityRow}>
-                                {/* <Text style={styles.userCityText}>
-                                    {this.state.player.country_name}
-                                </Text> */}
-                            </View>
-                        </View>
-                    </View>
-                </ImageBackground>
-            </View>
-        );
-    };
-
-    renderBioText = () => {
-        return (
-            <ClubDescription
-                club_id={this.state.club.club_id}
-                club_descriptions={this.state.club_descriptions}
-                navigation={this.props.navigation}
-            />
-        );
-    };
 
 
     renderTabs() {
@@ -209,7 +168,7 @@ export default class UserProfile extends Component {
                             });
                         }}
                     >
-                        <Text style={{ fontSize: 18, alignSelf: "center", color: "white" }}>{this.state.user.followers} Swaps</Text>
+                        <Text style={{ fontSize: 18, alignSelf: "center", color: "white" }}>{this.state.profile.followers} Swaps</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -230,7 +189,7 @@ export default class UserProfile extends Component {
                             });
                         }}
                     >
-                        <Text style={{ fontSize: 18, alignSelf: "center", color: "white" }}>{this.state.user.followers} Followers</Text>
+                        <Text style={{ fontSize: 18, alignSelf: "center", color: "white" }}>{this.state.profile.followers} Followers</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -238,20 +197,83 @@ export default class UserProfile extends Component {
     }
 
     getUserProfileImage = () => {
-        return getProfileImage('user', this.state.user.profile_image);
+        return getProfileImage('user', this.state.profile.profile_image);
     }
 
     render() {
         return (
-            <ScrollView style={styles.scroll}>
-                <View style={styles.container}>
-                    <Card containerStyle={styles.cardContainer}>
-                        {this.renderHeader()}
-                        {this.renderTabs()}
-                        <FeedComponent navigation={this.props.navigation} type='user' id={this.state.user.user_id} />
-                    </Card>
+            // <ScrollView style={styles.scroll}>
+            //     {/* <View style={styles.container}>
+            //         <Card containerStyle={styles.cardContainer}>
+            //             {this.renderHeader()}
+            //             {this.renderTabs()}
+            //             <FeedComponent navigation={this.props.navigation} type='user' id={this.state.user.user_id} />
+            //         </Card>
+            //     </View> */}
+            // </ScrollView>
+
+            <CollapsibleHeaderScrollView
+                CollapsibleHeaderComponent={
+                    <View>
+                        <View style={{
+                            flexDirection: 'row'
+                        }}>
+                            <Image style={{ height: 120, position: 'absolute', left: 0, top: -12, width: '100%' }} source={{ uri: getProfileImage('user', this.state.profile.cover_image) }} />
+
+
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'column',
+                                bottom: -52
+
+                            }}>
+                                <Image
+                                    style={styles.userImage}
+                                    source={{ uri: this.getUserProfileImage() }}
+                                />
+                                <Text style={{ fontSize: 20, marginLeft: 12 }}>
+                                    {this.state.profile.first_name + ' ' + this.state.profile.last_name}
+                                </Text>
+                            </View>
+
+
+
+
+
+                            <View style={{ margin: 12, bottom: -102 }}>
+                                <FollowUnFollowBtnComponent
+                                    is_followed={this.state.profile.is_followed}
+                                    context={this}
+                                    actionCallback={this.onFollowUnfollow}
+                                    user_id={this.state.profile.user_id}
+                                />
+                            </View>
+                        </View>
+
+
+                        <Text style={{ alignSelf: 'flex-start', top: 40, margin: 16, textAlign: 'justify' }}>{this.state.profile.profile_description}</Text>
+
+                        {/* <View style={{ top: 40, flexDirection: 'row', padding: 12 }}>
+                            <Icon type="ionicon" name="location-outline" size={18} />
+                            <Text style={{}}>Islamabad, Pakistan</Text>
+                        </View > */}
+
+                        <View style={{ top: 30, flexDirection: 'row', padding: 12 }}>
+                            <Text style={{ fontWeight: 'bold' }}>{this.state.profile.followed} </Text>
+                            <Text>Following</Text>
+
+                            <Text style={{ fontWeight: 'bold', marginLeft: 14 }}>{this.state.followers} </Text>
+                            <Text>Followers</Text>
+                        </View >
+                    </ View>
+                }
+                headerHeight={350}
+                statusBarHeight={Platform.OS === 'ios' ? 0 : 0}
+            >
+                <View style={{ height: 2000, backgroundColor: 'white' }}>
+                    <FeedComponent type="user" id={this.state.profile.user_id} />
                 </View>
-            </ScrollView>
+            </CollapsibleHeaderScrollView>
         );
     }
 }

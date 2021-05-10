@@ -217,11 +217,11 @@ export default class SingleClub extends Component {
           </TouchableOpacity>
         </View>
 
-        <View style={{ justifyContent: 'center', flex: 1, flexDirection: 'row', backgroundColor: Colors.green.greencolor, borderRightWidth: 1, borderRightColor: 'white' }}>
+        {/* <View style={{ justifyContent: 'center', flex: 1, flexDirection: 'row', backgroundColor: Colors.green.greencolor, borderRightWidth: 1, borderRightColor: 'white' }}>
           <TouchableOpacity style={{ justifyContent: 'center', }} onPress={() => { this.props.navigation.navigate('ClubPlayers', { club_id: this.state.club.club_id }) }}>
             <Text style={{ fontSize: 18, alignSelf: 'center', color: 'white' }}>{this.state.club.players} Players</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={{ justifyContent: 'center', flex: 1, flexDirection: 'row', backgroundColor: Colors.green.greencolor, }}>
           <TouchableOpacity style={{ justifyContent: 'center', }} onPress={() => { this.props.navigation.navigate('ClubFollowers', { id: this.state.club.club_id, type: 'club' }) }}>
             <Text style={{ fontSize: 18, alignSelf: 'center', color: 'white' }}>{this.state.club.followers} Followers</Text>

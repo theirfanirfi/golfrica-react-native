@@ -30,6 +30,7 @@
     "react-native-base64": "^0.2.1",
     "react-native-button": "^3.0.1",
     "react-native-cards": "^1.1.4",
+    "react-native-collapsible-header-views": "^1.1.2",
     "react-native-dropdownalert": "^4.3.0",
     "react-native-dynamic-vector-icons": "^1.1.4",
     "react-native-elements": "^3.2.0",
