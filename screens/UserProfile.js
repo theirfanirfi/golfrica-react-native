@@ -108,7 +108,8 @@ export default class UserProfile extends Component {
         user_statuses: [],
         token: null,
         isLoggedIn: false,
-        followers: 0
+        followers: 0,
+        isMe: false
     };
 
     async componentDidMount() {
@@ -121,7 +122,7 @@ export default class UserProfile extends Component {
             this.setState({
                 profile: profile,
                 followers: profile.followers,
-
+                isMe: res.isMe
             });
         }
     }
@@ -241,12 +242,24 @@ export default class UserProfile extends Component {
 
 
                             <View style={{ margin: 12, bottom: -102 }}>
-                                <FollowUnFollowBtnComponent
-                                    is_followed={this.state.profile.is_followed}
-                                    context={this}
-                                    actionCallback={this.onFollowUnfollow}
-                                    user_id={this.state.profile.user_id}
-                                />
+                                {this.state.isMe ? (
+                                    <Button
+                                        onPress={() => this.props.navigation.navigate('editProfile', { screen: 'EditProfile' })}
+                                        buttonStyle={{ borderColor: 'green' }}
+                                        titleStyle={{ color: 'green' }}
+                                        title="Edit Profile"
+                                        type="outline" />
+                                ) : (
+                                    <FollowUnFollowBtnComponent
+                                        is_followed={this.state.profile.is_followed}
+                                        context={this}
+                                        actionCallback={this.onFollowUnfollow}
+                                        user_id={this.state.profile.user_id}
+                                    />
+                                )
+                                }
+
+
                             </View>
                         </View>
 

@@ -320,6 +320,29 @@ function singleFeedNavigator(navigator) {
   )
 }
 
+function editProfileNavigator(navigator) {
+  return (
+    <Stack.Navigator initialRouteName="EditProfile"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerBackTitle: 'Back',
+      }}
+    >
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{ headerTitle: 'Edit Profile' }}
+      />
+    </Stack.Navigator>
+  )
+}
+
 function SwapNavigator(navigator) {
   return (
     <Stack.Navigator
@@ -592,6 +615,7 @@ export default function RootNavigator() {
       <Stack.Screen name="Auth" component={AuthNavigator} />
       <Stack.Screen name="profile" component={profileNavigator} />
       <Stack.Screen name="singleFeed" component={singleFeedNavigator} />
+      <Stack.Screen name="editProfile" component={editProfileNavigator} />
     </Stack.Navigator>
   )
 }
