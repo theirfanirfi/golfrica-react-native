@@ -146,8 +146,7 @@ export default class CreateStatus extends React.Component {
       const res = response.response;
       if (res.isStatusPosted) {
         this.setState({ status_images: [], status_text: null, imagesListVisibility: false, isUploading: false }, () => {
-          Alert.alert('Status Posted');
-          // this.props.navigation.navigate('Feed')
+          this.props.navigation.navigate('singleFeed', { screen: 'SingleFeed', params: { status_id: res.status.status_id } });
         })
       } else {
         this.setState({ isUploading: false })

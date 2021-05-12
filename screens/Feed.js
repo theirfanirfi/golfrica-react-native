@@ -168,7 +168,7 @@ export default class Feed extends React.Component {
 
                                         <CarouselComponent media={status.status_media} />
 
-                                        <RatingStarsComponent status={status} />
+                                        <RatingStarsComponent navigation={this.props.navigation} status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
                                             <Text style={styles.time}>{getMoment(status.created_at)}</Text>

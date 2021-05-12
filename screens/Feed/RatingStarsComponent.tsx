@@ -48,8 +48,9 @@ export default class RatingStarsComponent extends React.PureComponent {
         const response = await rateAndCommentStatus(this, formdata);
         if (response.status) {
             if (response.response.isCommented) {
+                console.log(response.response)
                 this.setState({ dialogVisibility: false }, () => {
-                    Alert.alert('Status rated.');
+                    this.props.navigation.navigate('singleFeed', { screen: 'SingleFeed', params: { status_id: response.response.messageOrComment.status_id } });
                 });
             } else {
                 Alert.alert(response.messageOrComment);

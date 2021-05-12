@@ -103,7 +103,7 @@ export default class ClubFeed extends React.Component {
 
                                         <CarouselComponent media={status.status_media} />
 
-                                        <RatingStarsComponent status={status} />
+                                        <RatingStarsComponent navigation={this.props.navigation} status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
                                             <Text style={styles.time}>{status.created_at}</Text>
@@ -115,7 +115,7 @@ export default class ClubFeed extends React.Component {
                                 <View style={styles.cardFooter}>
                                     <View style={styles.socialBarContainer}>
                                         <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                        <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
+                                        <CommentComponent navigation={this.props.navigation} showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         {/* <ShareComponent status={status} />
                                         <SwapBtnComponent status={status} is_club={true} navigation={this.props.navigation} showAlert={this.actionCallBack} /> */}
                                     </View>
