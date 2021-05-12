@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Image, Dimensions, ScrollView, RefreshControl, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, Image, Dimensions, ScrollView, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getSingleStatus } from '../apis/';
@@ -7,10 +7,9 @@ import DropdownAlert from 'react-native-dropdownalert';
 import RatingStarsComponent from './Feed/RatingStarsComponent';
 import LikeComponent from './Feed/LikeComponent';
 import CommentComponent from './Feed/CommentComponent';
-import ShareComponent from './Feed/ShareComponent';
-import SwapBtnComponent from './Feed/SwapBtnComponent';
 import CommentsComponent from './Feed/CommentsComponent';
 import CarouselComponent from './Feed/CarouselComponent';
+import RatingCommentComponent from './Feed/RatingCommentComponent'
 const windowWidth = Dimensions.get('screen').width;
 import { getProfileImage } from './shared/utils'
 export default class SingleFeed extends React.Component {
@@ -31,13 +30,28 @@ export default class SingleFeed extends React.Component {
         this.dropDownAlertRef.alertWithType(action, msg);
     }
 
+    commentCallBack = (context, comment) => {
+        console.log('comment received')
+        console.log(comment)
+        let cmnts = context.state.comments
+        console.log('size before: ' + cmnts.length);
+
+        cmnts.unshift(comment);
+        console.log('size after: ' + cmnts.length);
+
+        context.setState({ comments: cmnts })
+        console.log('state size: ' + this.state.comments.length);
+
+    }
+
     loadStatus = async (status_id: number) => {
         const status = await getSingleStatus(this, status_id);
-        // console.log(status.response.comments.comments)
-        console.log(status)
         if (status.status) {
-            this.setState({ status: status.response.status[0], comments: status.response.comments.comments, isRefreshing: false });
+            this.setState({ status: status.response.status[0], comments: status.response.comments.comments, isRefreshing: false }, () => {
+                console.log(this.state.comments[0])
+            });
         } else {
+
             this.actionCallBack('error', status.response.message);
         }
     }
@@ -81,56 +95,104 @@ export default class SingleFeed extends React.Component {
         }
     }
 
+    goToProfile = (status) => {
+        console.log(status);
+        if (status.is_club_status == 1) {
+            this.props.navigation.navigate('CountryClubs', { screen: 'SingleClub', params: { club_id: status.club_id } });
+
+        } else if (status.is_app_status == 1) {
+            // this.props.navigation.navigate('UserProfile', { user_id: status.user_id });
+            this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: status.user_id } })
+
+
+        } else if (status.is_player_status == 1) {
+            this.props.navigation.navigate('PlayerProfile', { player_id: status.player_id })
+        }
+    }
+
 
     render() {
         const status = this.state.status;
         return (
             <View style={styles.container}>
                 <SafeAreaView>
+                    <ScrollView>
+                        <View style={styles.card}>
 
-                    <View style={styles.card}>
+                            <View style={styles.cardHeader}>
+                                <View>
+                                    <TouchableOpacity onPress={() => this.goToProfile(status)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: this.getProfileImage(status) }} />
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 12 }}>{this.getNameOfPoster()}</Text>
+                                    </TouchableOpacity>
 
-                        <View style={styles.cardHeader}>
-                            <View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: this.getProfileImage(status) }} />
-                                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 12 }}>{this.getNameOfPoster()}</Text>
+
+                                    <Text style={styles.description}>{status.status_description}</Text>
+
+
+                                    <CarouselComponent media={status.status_media} />
+
+                                    <RatingStarsComponent status={status} />
+                                    <View style={styles.timeContainer}>
+                                        <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
+                                        <Text style={styles.time}>{status.created_at}</Text>
+                                    </View>
+
+
                                 </View>
-
-
-                                <Text style={styles.description}>{status.status_description}</Text>
-
-
-                                <CarouselComponent media={status.status_media} />
-
-                                <RatingStarsComponent status={status} />
-                                <View style={styles.timeContainer}>
-                                    <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                    <Text style={styles.time}>{status.created_at}</Text>
-                                </View>
-
-
                             </View>
-                        </View>
 
 
-                        <View style={styles.cardFooter}>
-                            <View style={styles.socialBarContainer}>
-                                <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                {/* <ShareComponent status={status} />
+                            <View style={styles.cardFooter}>
+                                <View style={styles.socialBarContainer}>
+                                    <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
+                                    <CommentComponent navigation={this.props.navigation} showAlert={this.actionCallBack} token={this.state.token} status={status} />
+                                    {/* <ShareComponent status={status} />
                                 <SwapBtnComponent status={status} showAlert={this.actionCallBack} /> */}
+                                </View>
                             </View>
                         </View>
-                    </View>
 
-                    <Text style={{ marginLeft: 12, marginTop: 12 }}>Comments</Text>
 
-                    <View style={styles.cardHeader}>
-                        <CommentsComponent comments={this.state.comments} />
-                    </View>
-                    <DropdownAlert ref={ref => this.dropDownAlertRef = ref} />
+                        <View style={{ padding: 12, backgroundColor: 'white' }}>
+                            <Text style={{ marginLeft: 12, marginTop: 12 }}>Comments</Text>
 
+                            <RatingCommentComponent status={status} context={this} commentCallBack={this.commentCallBack} />
+                            {/* <CommentsComponent comments={this.state.comments} /> */}
+
+
+                            <View style={{ marginTop: 20 }}>
+
+                                {this.state.comments.map((element, index) => {
+                                    const comment = element
+                                    console.log('index: ' + index)
+                                    console.log(comment)
+
+                                    return (
+                                        <TouchableOpacity
+                                            onPress={() => this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: comment.user_id } })
+                                            } style={{ flexDirection: 'row', alignContent: 'space-around', width: windowWidth - 100, marginVertical: 12 }}>
+                                            <View style={{ alignItems: 'flex-start', alignSelf: 'flex-start' }}>
+                                                <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: getProfileImage('user', comment.profile_image) }} />
+                                            </View>
+                                            <View style={{ alignSelf: 'flex-start' }}>
+                                                <Text style={{ marginLeft: 16, marginTop: 10, fontWeight: 'bold' }}>{comment.first_name + ' ' + comment.last_name}</Text>
+                                                <Text style={{ marginLeft: 16, marginTop: 6, textAlign: 'auto', width: windowWidth - 130, paddingRight: 4 }}>
+                                                    {comment.comment}
+                                                </Text>
+                                                <Text style={{ color: 'orange', marginTop: 4, marginLeft: 16 }}>Stars: {comment.rating}</Text>
+                                                <View style={{ flexDirection: 'row', marginRight: 16, marginTop: 4, alignSelf: 'flex-end' }}>
+                                                    <Text style={{ color: 'gray', marginTop: 4 }}>5h ago</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity >
+                                    )
+                                })}
+
+                            </View>
+
+                        </View>
+                    </ScrollView>
                 </SafeAreaView>
             </View>
         );

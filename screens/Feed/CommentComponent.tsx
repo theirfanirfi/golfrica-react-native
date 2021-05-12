@@ -25,10 +25,18 @@ export default class CommentComponent extends React.PureComponent {
         return parseInt(value);
     }
 
+    commentCallBack = (context, comment) => {
+        console.log(comment)
+        let cmnts = context.state.comments
+        cmnts.push(comment);
+        context.setState({ comments: cmnts })
+    }
+
     async retrieveComments() {
         const comments = await getStatusComments(this, this.props.token, this.props.status.status_id)
+        // console.log(comments.response.comments)
         this.setState({
-            comments: comments.response.comments,
+            comments: comments.response.comments.comments,
             visible: true,
         }, () => {
         })
@@ -36,24 +44,14 @@ export default class CommentComponent extends React.PureComponent {
 
     render() {
         const status = this.props.status;
-
         return (
 
 
             <View style={styles.socialBarSection}>
-                <Modal isVisible={this.state.visible} deviceHeight={windowHeight - 20} swipeDirection={['down']} onSwipeComplete={() => { this.setState({ visible: false }) }}>
-                    <View style={{ flex: 1, backgroundColor: '#fff', marginTop: 30, padding: 12 }}>
-                        <RatingCommentComponent status={status} />
-                        <CommentsComponent comments={this.state.comments.comments} />
-                    </View>
-                </Modal>
-                <TouchableOpacity onPress={() => this.retrieveComments()} style={styles.socialBarButton}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('singleFeed', { screen: 'SingleFeed', params: { status_id: status.status_id } })} style={styles.socialBarButton}>
                     <TabBarIcon size={20} name='comments' color='gray' />
                     <Text style={styles.socialBarLabel}> {status.total_comments + status.status_sm_comments}</Text>
                 </TouchableOpacity>
-
-
-
             </View>
 
         );
@@ -76,4 +74,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     }
-}); 
+});

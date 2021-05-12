@@ -236,6 +236,90 @@ function playersNavigator(navigator) {
 }
 
 
+function profileNavigator(navigator) {
+  return (
+    <Stack.Navigator initialRouteName="PlayerProfile"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerBackTitle: 'Back',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Bell navigation={navigator.navigation} />
+            <Icon
+              onPress={() => {
+                navigator.navigation.navigate('News', { screen: 'EditProfile' })
+              }}
+              name="user-circle-o"
+              color="white"
+              size={30}
+              style={{ marginRight: 14 }}
+            />
+          </View>
+        )
+      }}
+    >
+      <Stack.Screen
+        name="PlayerProfile"
+        component={UserProfile}
+        options={({ navigation, route }) => ({
+          headerRight: (props) => {
+            const { user_id } = route.params
+            return (
+              <TouchableOpacity style={{ marginRight: 24, }} onPress={() => navigation.navigate('Chat', { chat_with_id: user_id })}>
+                <Icon name='comments' size={30} color='white' />
+              </TouchableOpacity>
+            )
+          }
+        })}
+      />
+    </Stack.Navigator>
+  )
+}
+
+
+function singleFeedNavigator(navigator) {
+  return (
+    <Stack.Navigator initialRouteName="SingleFeed"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerBackTitle: 'Back',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Bell navigation={navigator.navigation} />
+            <Icon
+              onPress={() => {
+                navigator.navigation.navigate('News', { screen: 'EditProfile' })
+              }}
+              name="user-circle-o"
+              color="white"
+              size={30}
+              style={{ marginRight: 14 }}
+            />
+          </View>
+        )
+      }}
+    >
+      <Stack.Screen
+        name="SingleFeed"
+        component={SingleFeed}
+        options={{ headerTitle: 'News' }}
+      />
+    </Stack.Navigator>
+  )
+}
+
 function SwapNavigator(navigator) {
   return (
     <Stack.Navigator
@@ -506,6 +590,8 @@ export default function RootNavigator() {
       <Stack.Screen name="Splash" component={SplashNavigator} />
       <Stack.Screen name="Root" component={BottomNavigation} />
       <Stack.Screen name="Auth" component={AuthNavigator} />
+      <Stack.Screen name="profile" component={profileNavigator} />
+      <Stack.Screen name="singleFeed" component={singleFeedNavigator} />
     </Stack.Navigator>
   )
 }

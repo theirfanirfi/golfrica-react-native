@@ -22,15 +22,18 @@ export default class FeedComponent extends React.Component {
         id: 0
     };
 
-    async componentDidMount() {
-        const { id, type } = await this.props
-        this.setState({ type: type, id: id });
+    async getStatuses() {
         const statuses = await getFeedComponentStatuses(this, this.state.type, this.state.id);
         if (statuses.status) {
             const res = statuses.response
             this.setState({ statuses: res.statuses, isRefreshing: false });
         }
+    }
+    async componentDidMount() {
+        const { id, type } = await this.props
+        this.setState({ type: type, id: id });
 
+        setTimeout(() => this.getStatuses(), 3000)
 
     }
 
@@ -131,7 +134,7 @@ export default class FeedComponent extends React.Component {
                                 <View style={styles.cardFooter}>
                                     <View style={styles.socialBarContainer}>
                                         <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                        <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
+                                        <CommentComponent navigation={this.props.navigation} showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         {/* <ShareComponent status={status} /> */}
                                         {/* <SwapBtnComponent status={status} showAlert={this.actionCallBack} /> */}
                                     </View>
@@ -139,7 +142,7 @@ export default class FeedComponent extends React.Component {
                             </View>
                         )
                     }} />
-                <DropdownAlert ref={ref => this.dropDownAlertRef = ref} />
+
 
             </View>
         );

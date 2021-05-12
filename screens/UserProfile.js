@@ -250,7 +250,6 @@ export default class UserProfile extends Component {
                             </View>
                         </View>
 
-
                         <Text style={{ alignSelf: 'flex-start', top: 40, margin: 16, textAlign: 'justify' }}>{this.state.profile.profile_description}</Text>
 
                         {/* <View style={{ top: 40, flexDirection: 'row', padding: 12 }}>
@@ -271,7 +270,7 @@ export default class UserProfile extends Component {
                 statusBarHeight={Platform.OS === 'ios' ? 0 : 0}
             >
                 <View style={{ height: 2000, backgroundColor: 'white' }}>
-                    <FeedComponent type="user" id={this.state.profile.user_id} />
+                    <FeedComponent navigation={this.props.navigation} type="user" id={this.state.profile.user_id} />
                 </View>
             </CollapsibleHeaderScrollView>
         );

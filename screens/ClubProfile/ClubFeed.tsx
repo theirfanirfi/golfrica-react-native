@@ -116,8 +116,8 @@ export default class ClubFeed extends React.Component {
                                     <View style={styles.socialBarContainer}>
                                         <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
                                         <CommentComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                        <ShareComponent status={status} />
-                                        <SwapBtnComponent status={status} is_club={true} navigation={this.props.navigation} showAlert={this.actionCallBack} />
+                                        {/* <ShareComponent status={status} />
+                                        <SwapBtnComponent status={status} is_club={true} navigation={this.props.navigation} showAlert={this.actionCallBack} /> */}
                                     </View>
                                 </View>
                             </View>

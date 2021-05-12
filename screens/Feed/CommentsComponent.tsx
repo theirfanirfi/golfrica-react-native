@@ -16,8 +16,32 @@ export default class CommentsComponent extends React.PureComponent {
         isLiked: PropTypes.bool
     }
 
-    static getDerivedStateFromProps(props, current_state) {
-        if (current_state.comments !== props.comments && props.comments !== undefined) {
+
+    componentDidMount() {
+        // let media = this.props.media;
+        // if (media == undefined) {
+        //     return null;
+        // } else {
+        //     let jMedia = JSON.parse(media);
+        //     let VImages = [];
+        //     if (jMedia.images.length > 0) {
+        //         jMedia.images.map((element, index) => {
+        //             VImages.push({
+        //                 "uri": element
+        //             });
+        //         });
+        //     }
+
+
+        this.setState({ comments: this.props.comments });
+        // }
+
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        if (state.comments !== props.comments && props.comments !== undefined) {
+            console.log('comment changed static')
+
             return {
                 comments: props.comments
             };
@@ -26,36 +50,17 @@ export default class CommentsComponent extends React.PureComponent {
         return null
     }
 
+    componentDidUpdate(prevProps) {
 
-
-    componentDidMount() {
-        let media = this.props.media;
-        if (media == undefined) {
-            return null;
-        } else {
-            let jMedia = JSON.parse(media);
-            let VImages = [];
-            if (jMedia.images.length > 0) {
-                jMedia.images.map((element, index) => {
-                    VImages.push({
-                        "uri": element
-                    });
-                });
-            }
-
-
-            this.setState({ media: jMedia.images, ImageViewerImages: VImages });
+        if (this.props.comments !== prevProps.comments) {
+            console.log('comment changed')
+            this.setState({ comments: this.props.comments });
         }
 
     }
 
 
-    // componentDidMount() {
-    //     let cmts = this.props.comments;
-    //     if (cmts !== undefined) {
-    //         this.setState({ comments: cmts });
-    //     }
-    // }
+
 
     showErrorAlert = msg => {
         this.props.showAlert('error', msg);
@@ -70,14 +75,10 @@ export default class CommentsComponent extends React.PureComponent {
     render() {
 
         return (
-            <FlatList
-                data={this.state.comments}
-                keyExtractor={(item) => {
-                    return item.comment_id;
-                }}
-                renderItem={(item) => {
-                    const comment = item.item
-                    console.log(comment)
+            <View style={{ marginTop: 20 }}>
+
+                {this.state.comments.map((element, index) => {
+                    const comment = element
                     return (
                         <TouchableOpacity onLongPress={() => console.log('long press')} style={{ flexDirection: 'row', alignContent: 'space-around', width: windowWidth - 100, marginVertical: 12 }}>
                             <View style={{ alignItems: 'flex-start', alignSelf: 'flex-start' }}>
@@ -95,8 +96,9 @@ export default class CommentsComponent extends React.PureComponent {
                             </View>
                         </TouchableOpacity >
                     )
-                }}
-            />
+                })}
+
+            </View>
 
         );
     }
@@ -124,4 +126,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     }
-}); 
+});

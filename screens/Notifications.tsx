@@ -35,7 +35,7 @@ export default class Notifications extends React.Component {
     render() {
         return (
             <View style={{ backgroundColor: 'white' }}>
-                <View style={{ justifyContent: 'center', flexDirection: 'row', backgroundColor: '#066E31' }}>
+                {/* <View style={{ justifyContent: 'center', flexDirection: 'row', backgroundColor: '#066E31' }}>
 
                     <TouchableOpacity style={{ padding: 12, paddingHorizontal: 18 }}
                         onPress={() => this.setState({ tabView: <SwapRequests navigation={this.props.navigation} /> })}>
@@ -46,7 +46,9 @@ export default class Notifications extends React.Component {
                         <Text style={this.getPlatformStyle()}>Notifications </Text>
                     </TouchableOpacity>
                 </View>
-                {this.state.tabView}
+                {this.state.tabView} */}
+
+                <ActionsNotification navigation={this.props.navigation} />
             </View>
         );
     }

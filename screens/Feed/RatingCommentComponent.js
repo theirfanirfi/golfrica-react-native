@@ -45,9 +45,14 @@ export default class RatingCommentComponent extends React.PureComponent {
         const response = await rateAndCommentStatus(this, formdata);
         if (response.status) {
             if (response.response.isCommented) {
-                this.setState({ dialogVisibility: false }, () => {
-                    Alert.alert('Status rated.');
+                console.log(response.response.messageOrComment)
+                this.setState({ value: '' }, () => {
+                    // Alert.alert('Status rated.');
+                    this.props.commentCallBack(this.props.context, response.response.messageOrComment)
+
                 });
+
+
             } else {
                 Alert.alert(response.messageOrComment);
             }
@@ -59,7 +64,7 @@ export default class RatingCommentComponent extends React.PureComponent {
 
     render() {
         return (
-            <View style={{ flex: 1, flexDirection: 'column' }}>
+            <View style={{ flexDirection: 'column', }}>
 
                 <TextInput multiline={true} style={{ borderColor: 'gray', borderWidth: 0.5, height: 80, marginTop: 8, padding: 8 }} numberOfLines={6}
                     value={this.state.value} onChangeText={(text) => this.setState({ value: text })} />
