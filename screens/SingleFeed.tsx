@@ -144,7 +144,7 @@ export default class SingleFeed extends React.Component {
             let status_time = ''
             if (status.status_time) {
                 // status_time = status_time.replace(" ", "T");
-                status_time = getTimeeInLocalTimeZone(status.status_time)
+                status_time = getTimeInLocalTimeZone(status.status_time)
             }
 
 

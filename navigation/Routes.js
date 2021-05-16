@@ -257,7 +257,7 @@ function profileNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('News', { screen: 'EditProfile' })
+                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
               }}
               name="user-circle-o"
               color="white"
@@ -304,7 +304,7 @@ function singleFeedNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('News', { screen: 'EditProfile' })
+                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
               }}
               name="user-circle-o"
               color="white"
@@ -467,12 +467,33 @@ function CountriesNavigator(navigator) {
 
 function ChatNavigator() {
   return (
-    <Stack.Navigator screenOptions={{
-      headerBackTitleStyle: { color: 'white' },
-      headerTintColor: 'white',
-      headerTitleStyle: { color: 'white' },
-      headerStyle: { backgroundColor: Colors.green.greencolor },
-    }}>
+    <Stack.Navigator
+
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerBackTitle: 'Back',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Bell navigation={navigator.navigation} />
+            <Icon
+              onPress={() => {
+                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+              }}
+              name="user-circle-o"
+              color="white"
+              size={30}
+              style={{ marginRight: 14 }}
+            />
+          </View>
+        )
+      }}
+    >
 
       <Stack.Screen
         name="Chats"
@@ -492,15 +513,32 @@ function ChatNavigator() {
 
 function ClubsNavigator(navigator) {
   return (
-    <Stack.Navigator initialRouteName="Clubs" screenOptions={{
-      headerTitleStyle: { color: 'white' },
-      headerBackTitleStyle: { color: 'white' },
-      headerTintColor: 'white',
-      gestureEnabled: true,
-      gestureDirection: 'horizontal',
-      headerStyle: { backgroundColor: Colors.green.greencolor },
-      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-    }}
+    <Stack.Navigator initialRouteName="Clubs"
+
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerBackTitle: 'Back',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Bell navigation={navigator.navigation} />
+            <Icon
+              onPress={() => {
+                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+              }}
+              name="user-circle-o"
+              color="white"
+              size={30}
+              style={{ marginRight: 14 }}
+            />
+          </View>
+        )
+      }}
 
     >
 
