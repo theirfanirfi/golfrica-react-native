@@ -8,7 +8,7 @@ import RatingStarsComponent from './Feed/RatingStarsComponent';
 // import SwapBtnComponent from './Feed/SwapBtnComponent';
 import CarouselComponent from './Feed/CarouselComponent.js';
 import DropdownAlert from 'react-native-dropdownalert';
-import { getProfileImage, getMoment } from './shared/utils.js'
+import { getProfileImage, getTimeDifference } from './shared/utils.js'
 export default class Feed extends React.Component {
 
     state = {
@@ -171,7 +171,7 @@ export default class Feed extends React.Component {
                                         <RatingStarsComponent navigation={this.props.navigation} status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                            <Text style={styles.time}>{getMoment(status.created_at)}</Text>
+                                            <Text style={styles.time}>{getTimeDifference(status.created_at)}</Text>
                                         </View>
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View } from 'react-native'
+import { View, ActivityIndicator, Text } from 'react-native'
 import { Icon, Button } from 'react-native-elements'
 import { followUser } from '../apis/index'
 import Colors from '../constants/Colors'
@@ -8,7 +8,7 @@ interface User {
     actionCallBack: Function,
     context: any,
     is_followed: undefined,
-    user_id: number
+    user_id: number,
 }
 
 
@@ -22,12 +22,16 @@ export default class FollowUnFollowBtnComponent extends React.Component {
         token: null,
         user: [],
         is_followed: 0,
+        is_requesting: false
+
     }
     componentDidMount() {
         this.setState({ is_followed: this.props.is_followed });
     }
 
     followUnFollowUser = async () => {
+        this.setState({ is_requesting: true });
+
         const response = await followUser(this, this.props.user_id)
         if (response.status) {
             const res = response.response
@@ -40,7 +44,7 @@ export default class FollowUnFollowBtnComponent extends React.Component {
 
 
 
-                    this.setState({ is_followed: 0 });
+                    this.setState({ is_followed: 0, is_requesting: false });
                 } else {
 
                     // if (this.props.actionCallback != null) {
@@ -48,7 +52,7 @@ export default class FollowUnFollowBtnComponent extends React.Component {
                     // }
 
 
-                    this.setState({ is_followed: 1 });
+                    this.setState({ is_followed: 1, is_requesting: false });
                 }
             }
         }
@@ -69,9 +73,20 @@ export default class FollowUnFollowBtnComponent extends React.Component {
 
             <View>
                 {this.state.is_followed > 0 ? (
-                    <Button buttonStyle={{ backgroundColor: Colors.green.greencolor }} title="Unfollow" type="solid" onPress={() => this.followUnFollowUser()} />
+                    <Button
+                        buttonStyle={{ backgroundColor: Colors.green.greencolor, width: 88, }}
+                        title={this.state.is_requesting ? '' : ""}
+                        type="solid"
+                        icon={this.state.is_requesting ? <ActivityIndicator size="small" color='white' /> : <Text style={{ color: 'white', fontSize: 16 }}>Unfollow</Text>}
+                        onPress={() => this.followUnFollowUser()} />
                 ) : (
-                    <Button buttonStyle={{ borderColor: Colors.green.greencolor }} titleStyle={{ color: Colors.green.greencolor }} title="Follow   " type="outline" onPress={() => this.followUnFollowUser()} />
+                    <Button
+                        buttonStyle={{ borderColor: Colors.green.greencolor, width: 88 }}
+                        titleStyle={{ color: Colors.green.greencolor }}
+                        title={this.state.is_requesting ? '' : ""}
+                        type="outline"
+                        icon={this.state.is_requesting ? <ActivityIndicator size="small" color='green' /> : <Text style={{ color: 'green', fontSize: 16 }}>Follow</Text>}
+                        onPress={() => this.followUnFollowUser()} />
 
                 )}
             </View>

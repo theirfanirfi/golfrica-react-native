@@ -1,5 +1,5 @@
 // const endpoint = "http://thelekkihub.com/golfrica"
-const endpoint = "http://192.168.10.7:5000"
+const endpoint = "http://192.168.10.8:5000"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'react-native-axios'
 export const getEndPointUrl = () => {

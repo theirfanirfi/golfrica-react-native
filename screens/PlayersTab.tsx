@@ -13,7 +13,12 @@ export default class FollowersList extends React.PureComponent {
     }
 
     async componentDidMount() {
-        this.getPlayers();
+
+        this.props.navigation.addListener('focus', async () => {
+            this.setState({ isRefreshing: true }, () => this.getPlayers())
+        })
+        this.getPlayers()
+
     }
 
     async getPlayers() {

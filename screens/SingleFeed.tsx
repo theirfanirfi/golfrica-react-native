@@ -1,24 +1,22 @@
 import * as React from 'react';
-import { StyleSheet, Image, Dimensions, ScrollView, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Dimensions, ScrollView, Text, View, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getSingleStatus } from '../apis/';
-import DropdownAlert from 'react-native-dropdownalert';
 import RatingStarsComponent from './Feed/RatingStarsComponent';
 import LikeComponent from './Feed/LikeComponent';
 import CommentComponent from './Feed/CommentComponent';
-import CommentsComponent from './Feed/CommentsComponent';
 import CarouselComponent from './Feed/CarouselComponent';
 import RatingCommentComponent from './Feed/RatingCommentComponent'
 const windowWidth = Dimensions.get('screen').width;
-import { getProfileImage } from './shared/utils'
+import { getProfileImage, getTimeDifference, getTimeInLocalTimeZone, getTimeeInLocalTimeZone } from './shared/utils'
 export default class SingleFeed extends React.Component {
     state = {
         status_id: 0,
         dialogVisibility: false,
         isLoggedIn: false,
         user: [],
-        status: [],
+        status: undefined,
         response: [],
         comments: [],
         token: null,
@@ -26,8 +24,32 @@ export default class SingleFeed extends React.Component {
         isRefreshing: true,
     };
 
+    getStatusTimeInLocalTimeZone(datetime) {
+        datetime = datetime.replace(" ", "T");
+        let date = new Date(datetime);
+        let newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+        let offset = date.getTimezoneOffset() / 60;
+        let hours = date.getHours();
+
+        newDate.setHours(hours - offset);
+        let strDate = "";
+        let amPm = "pm";
+
+        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+
+        if (hours > 12) {
+            strDate = "0" + (hours - 12) + ":" + minutes + " pm"
+        } else {
+            hours < 10 ? strDate = "0" + hours : strDate = hours
+            strDate += ":" + minutes + " am"
+        }
+
+        return strDate
+    }
+
     actionCallBack = (action, msg) => {
-        this.dropDownAlertRef.alertWithType(action, msg);
+        // this.dropDownAlertRef.alertWithType(action, msg);
     }
 
     commentCallBack = (context, comment) => {
@@ -48,7 +70,7 @@ export default class SingleFeed extends React.Component {
         const status = await getSingleStatus(this, status_id);
         if (status.status) {
             this.setState({ status: status.response.status[0], comments: status.response.comments.comments, isRefreshing: false }, () => {
-                console.log(this.state.comments[0])
+
             });
         } else {
 
@@ -112,90 +134,110 @@ export default class SingleFeed extends React.Component {
 
 
     render() {
-        const status = this.state.status;
-        return (
-            <View style={styles.container}>
-                <SafeAreaView>
-                    <ScrollView>
-                        <View style={styles.card}>
+        let status = this.state.status;
 
-                            <View style={styles.cardHeader}>
-                                <View>
-                                    <TouchableOpacity onPress={() => this.goToProfile(status)} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: this.getProfileImage(status) }} />
-                                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 12 }}>{this.getNameOfPoster()}</Text>
-                                    </TouchableOpacity>
-
-
-                                    <Text style={styles.description}>{status.status_description}</Text>
+        if (this.state.status == undefined) {
+            return (<View style={{ flex: 1, justifyContent: 'center' }}>
+                <ActivityIndicator size="large" color='green' style={{ alignSelf: 'center' }} />
+            </View>)
+        } else {
+            let status_time = ''
+            if (status.status_time) {
+                // status_time = status_time.replace(" ", "T");
+                status_time = getTimeeInLocalTimeZone(status.status_time)
+            }
 
 
-                                    <CarouselComponent media={status.status_media} />
+            return (
+                <View style={styles.container}>
+                    <SafeAreaView>
+                        <ScrollView>
+                            <View style={styles.card}>
 
-                                    <RatingStarsComponent navigation={this.props.navigation} status={status} />
-                                    <View style={styles.timeContainer}>
-                                        <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                        <Text style={styles.time}>{status.created_at}</Text>
+                                <View style={styles.cardHeader}>
+                                    <View>
+                                        <TouchableOpacity onPress={() => this.goToProfile(status)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: this.getProfileImage(status) }} />
+                                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 12 }}>{this.getNameOfPoster()}</Text>
+                                        </TouchableOpacity>
+
+
+                                        <Text style={styles.description}>{status.status_description}</Text>
+
+
+                                        <CarouselComponent media={status.status_media} />
+
+                                        <RatingStarsComponent navigation={this.props.navigation} status={status} />
+                                        <View style={styles.timeContainer}>
+                                            <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
+                                            {/* <Text style={styles.time}>{this.getStatusTimeInLocalTimeZone(status_time)}</Text> */}
+                                            <Text style={styles.time}>{status_time}</Text>
+                                        </View>
+
+
                                     </View>
-
-
                                 </View>
-                            </View>
 
 
-                            <View style={styles.cardFooter}>
-                                <View style={styles.socialBarContainer}>
-                                    <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                    <CommentComponent navigation={this.props.navigation} showAlert={this.actionCallBack} token={this.state.token} status={status} />
-                                    {/* <ShareComponent status={status} />
+                                <View style={styles.cardFooter}>
+                                    <View style={styles.socialBarContainer}>
+                                        <LikeComponent showAlert={this.actionCallBack} token={this.state.token} status={status} />
+                                        <CommentComponent navigation={this.props.navigation} showAlert={this.actionCallBack} token={this.state.token} status={status} />
+                                        {/* <ShareComponent status={status} />
                                 <SwapBtnComponent status={status} showAlert={this.actionCallBack} /> */}
+                                    </View>
                                 </View>
                             </View>
-                        </View>
 
 
-                        <View style={{ padding: 12, backgroundColor: 'white' }}>
-                            <Text style={{ marginLeft: 12, marginTop: 12 }}>Comments</Text>
+                            <View style={{ padding: 12, backgroundColor: 'white' }}>
+                                <Text style={{ marginLeft: 12, marginTop: 12 }}>Comments</Text>
 
-                            <RatingCommentComponent status={status} context={this} commentCallBack={this.commentCallBack} />
-                            {/* <CommentsComponent comments={this.state.comments} /> */}
+                                <RatingCommentComponent status={status} context={this} commentCallBack={this.commentCallBack} />
+                                {/* <CommentsComponent comments={this.state.comments} /> */}
 
 
-                            <View style={{ marginTop: 20 }}>
+                                <View style={{ marginTop: 20 }}>
 
-                                {this.state.comments.map((element, index) => {
-                                    const comment = element
-                                    console.log('index: ' + index)
-                                    console.log(comment)
+                                    {this.state.comments.map((element, index) => {
+                                        const comment = element
+                                        console.log('index: ' + index)
+                                        console.log(comment)
 
-                                    return (
-                                        <TouchableOpacity
-                                            onPress={() => this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: comment.user_id } })
-                                            } style={{ flexDirection: 'row', alignContent: 'space-around', width: windowWidth - 100, marginVertical: 12 }}>
-                                            <View style={{ alignItems: 'flex-start', alignSelf: 'flex-start' }}>
-                                                <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: getProfileImage('user', comment.profile_image) }} />
-                                            </View>
-                                            <View style={{ alignSelf: 'flex-start' }}>
-                                                <Text style={{ marginLeft: 16, marginTop: 10, fontWeight: 'bold' }}>{comment.first_name + ' ' + comment.last_name}</Text>
-                                                <Text style={{ marginLeft: 16, marginTop: 6, textAlign: 'auto', width: windowWidth - 130, paddingRight: 4 }}>
-                                                    {comment.comment}
-                                                </Text>
-                                                <Text style={{ color: 'orange', marginTop: 4, marginLeft: 16 }}>Stars: {comment.rating}</Text>
-                                                <View style={{ flexDirection: 'row', marginRight: 16, marginTop: 4, alignSelf: 'flex-end' }}>
-                                                    <Text style={{ color: 'gray', marginTop: 4 }}>5h ago</Text>
+                                        return (
+                                            <TouchableOpacity
+                                                onPress={() => this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: comment.user_id } })
+                                                } style={{ flexDirection: 'row', alignContent: 'space-around', width: windowWidth - 100, marginVertical: 12 }}>
+                                                <View style={{ alignItems: 'flex-start', alignSelf: 'flex-start' }}>
+                                                    <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={{ uri: getProfileImage('user', comment.profile_image) }} />
                                                 </View>
-                                            </View>
-                                        </TouchableOpacity >
-                                    )
-                                })}
+                                                <View style={{ alignSelf: 'flex-start' }}>
+                                                    <Text style={{ marginLeft: 16, marginTop: 10, fontWeight: 'bold' }}>{comment.first_name + ' ' + comment.last_name}</Text>
+                                                    <Text style={{ marginLeft: 16, marginTop: 6, textAlign: 'auto', width: windowWidth - 130, paddingRight: 4 }}>
+                                                        {comment.comment}
+                                                    </Text>
+                                                    <Text style={{ color: 'orange', marginTop: 4, marginLeft: 16 }}>Stars: {comment.rating}</Text>
+                                                    <View style={{ flexDirection: 'row', marginRight: 16, marginTop: 4, alignSelf: 'flex-end' }}>
+                                                        <View>
+                                                            <Text style={{ color: 'gray', marginTop: 4 }}>{getTimeDifference(comment.created_at)}</Text>
+                                                            {/* <Text style={{ color: 'gray', marginTop: 1, fontSize: 10, alignSelf: 'flex-end' }}>{comment.created_at.substr(0, 19)}</Text> */}
+                                                            <Text style={{ color: 'gray', marginTop: 1, fontSize: 10, alignSelf: 'flex-end' }}>{getTimeInLocalTimeZone(comment.created_at)}</Text>
+                                                        </View>
+
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity >
+                                        )
+                                    })}
+
+                                </View>
 
                             </View>
-
-                        </View>
-                    </ScrollView>
-                </SafeAreaView>
-            </View>
-        );
+                        </ScrollView>
+                    </SafeAreaView>
+                </View>
+            );
+        }
     }
 
 }

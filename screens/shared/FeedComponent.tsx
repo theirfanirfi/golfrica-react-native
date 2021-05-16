@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, FlatList, Image, Text, View } from 'react-native';
+import { StyleSheet, FlatList, Image, Text, View, ActivityIndicator } from 'react-native';
 import { getFeedComponentStatuses } from '../../apis/';
 import LikeComponent from '../Feed/LikeComponent';
 import CommentComponent from '../Feed/CommentComponent';
@@ -8,7 +8,8 @@ import RatingStarsComponent from '../Feed/RatingStarsComponent';
 import SwapBtnComponent from '../Feed/SwapBtnComponent';
 import CarouselComponent from '../Feed/CarouselComponent.js';
 import DropdownAlert from 'react-native-dropdownalert';
-import { getProfileImage } from './utils.js'
+import { getProfileImage, getTimeDifference, getTimeInLocalTimeZone } from './utils.js'
+import Colors from '../../constants/Colors';
 export default class FeedComponent extends React.Component {
     state = {
         dialogVisibility: false,
@@ -87,8 +88,13 @@ export default class FeedComponent extends React.Component {
 
 
     render() {
+
+        if (this.state.isRefreshing) {
+            return <ActivityIndicator size="large" color={Colors.green.greencolor} />
+        }
         return (
-            <View >
+
+            <View>
 
                 <FlatList style={styles.list}
                     data={this.state.statuses}
@@ -125,7 +131,7 @@ export default class FeedComponent extends React.Component {
                                         <RatingStarsComponent navigation={this.props.navigation} status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                            <Text style={styles.time}>{status.created_at}</Text>
+                                            <Text style={styles.time}>{getTimeInLocalTimeZone(status.created_at)}</Text>
                                         </View>
 
 

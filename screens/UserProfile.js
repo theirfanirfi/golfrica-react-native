@@ -12,6 +12,7 @@ import {
     Text,
     View,
     TouchableOpacity,
+    ActivityIndicator
 } from "react-native";
 import Colors from "../constants/Colors";
 import { getUserProfile } from "../apis/";
@@ -109,7 +110,8 @@ export default class UserProfile extends Component {
         token: null,
         isLoggedIn: false,
         followers: 0,
-        isMe: false
+        isMe: false,
+        isRefreshing: true,
     };
 
     async componentDidMount() {
@@ -122,7 +124,8 @@ export default class UserProfile extends Component {
             this.setState({
                 profile: profile,
                 followers: profile.followers,
-                isMe: res.isMe
+                isMe: res.isMe,
+                isRefreshing: false
             });
         }
     }
@@ -202,6 +205,11 @@ export default class UserProfile extends Component {
     }
 
     render() {
+
+        if (this.state.isRefreshing) {
+            return <ActivityIndicator size="large" color={Colors.green.greencolor} />
+        }
+
         return (
             // <ScrollView style={styles.scroll}>
             //     {/* <View style={styles.container}>

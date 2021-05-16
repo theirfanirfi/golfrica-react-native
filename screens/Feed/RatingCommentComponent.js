@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { AirbnbRating } from 'react-native-ratings';
-import { View, Dimensions, Text, TextInput, Alert, Button } from 'react-native';
+import { View, Dimensions, Text, TextInput, Alert, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import base64 from 'react-native-base64';
 import { rateAndCommentStatus } from '../../apis/';
+import { Button } from 'react-native-elements'
 export default class RatingCommentComponent extends React.PureComponent {
     state = {
         dialogVisibility: false,
@@ -11,6 +12,7 @@ export default class RatingCommentComponent extends React.PureComponent {
         value: null,
         token: null,
         isCommented: false,
+        is_commenting: false
 
     }
     async componentDidMount() {
@@ -32,6 +34,7 @@ export default class RatingCommentComponent extends React.PureComponent {
     }
 
     async rateStatus() {
+        this.setState({ is_commenting: true });
         let data = {
             status_id: this.props.status.status_id,
             comment: this.state.value,
@@ -46,7 +49,7 @@ export default class RatingCommentComponent extends React.PureComponent {
         if (response.status) {
             if (response.response.isCommented) {
                 console.log(response.response.messageOrComment)
-                this.setState({ value: '' }, () => {
+                this.setState({ value: '', is_commenting: false }, () => {
                     // Alert.alert('Status rated.');
                     this.props.commentCallBack(this.props.context, response.response.messageOrComment)
 
@@ -54,9 +57,13 @@ export default class RatingCommentComponent extends React.PureComponent {
 
 
             } else {
+                this.setState({ is_commenting: false });
+
                 Alert.alert(response.messageOrComment);
             }
         } else {
+            this.setState({ is_commenting: false });
+
             Alert.alert(response.response);
 
         }
@@ -77,7 +84,13 @@ export default class RatingCommentComponent extends React.PureComponent {
                     starStyle={{ marginTop: 12, marginBottom: 12, marginHorizontal: 6 }}
 
                 />
-                <Button title="Submit" onPress={() => this.rateStatus()} />
+                <Button
+                    buttonStyle={{ borderColor: 'green' }}
+                    titleStyle={{ color: 'green' }}
+                    type="outline"
+                    title={this.state.is_commenting ? 'Please wait' : ''}
+                    icon={this.state.is_commenting ? <ActivityIndicator size="small" color='green' /> : <Text style={{ color: 'green', fontSize: 16 }}>Comment</Text>}
+                    onPress={() => this.rateStatus()} />
             </View>
         )
     }

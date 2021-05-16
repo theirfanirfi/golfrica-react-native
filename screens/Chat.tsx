@@ -1,10 +1,11 @@
 import React from 'react'
-import { GiftedChat } from 'react-native-gifted-chat'
-import { View } from 'react-native'
+import { GiftedChat, Time } from 'react-native-gifted-chat'
+import { View, Text } from 'react-native'
 import { getChatWithUser, sendChatMessage } from '../apis/';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import base64 from 'react-native-base64';
+import { getTimeDifference } from './shared/utils'
 
 
 export default class Chat extends React.Component {
@@ -71,6 +72,28 @@ export default class Chat extends React.Component {
 
     }
 
+    renderTimee(msg) {
+        let message = msg.currentMessage
+        console.log(message.createdAt)
+        let d = getTimeDifference(message.createdAt)
+        // msg.currentMessage.createdAt = d
+        if (msg.position == 'left') {
+            return (
+                <View style={{ margin: 6 }}>
+                    <Text style={{ color: 'gray', fontSize: 10 }}>{d}</Text>
+                    <Text style={{ color: 'gray', fontSize: 8 }}>{message.createdAt.substr(0, 10)}</Text>
+                </View>
+            )
+        } else {
+            return (
+                <View style={{ margin: 6 }}>
+                    <Text style={{ color: 'white', fontSize: 10 }}>{d}</Text>
+                    <Text style={{ color: 'white', fontSize: 8 }}>{message.createdAt.substr(0, 10)}</Text>
+                </View>
+            )
+        }
+    }
+
     render() {
         return (
             <View style={{ height: '100%', backgroundColor: 'white' }}>
@@ -81,6 +104,7 @@ export default class Chat extends React.Component {
                     user={{
                         _id: this.state.user.user_id
                     }}
+                    renderTime={this.renderTimee}
                 />
             </View>
         )

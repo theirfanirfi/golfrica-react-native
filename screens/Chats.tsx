@@ -104,10 +104,12 @@ export default class Chats extends React.Component {
                                     onPress={() => this.goToChat(item.p_id)}
                                 >{this.getLastMessage(item)}
                                 </Text>
-                                <Badge
-                                    value={item.unread_msgs}
-                                    status="warning"
-                                    containerStyle={{ alignSelf: 'flex-end', marginLeft: 250 }} />
+                                {item.unread_msgs > 0 &&
+                                    <Badge
+                                        value={item.unread_msgs}
+                                        status="warning"
+                                        containerStyle={{ alignSelf: 'flex-end', marginLeft: 250 }} />
+                                }
 
                             </View>
 

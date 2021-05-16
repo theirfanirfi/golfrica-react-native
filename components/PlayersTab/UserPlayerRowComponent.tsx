@@ -66,8 +66,9 @@ export default class UserPlayerRowComponent extends React.Component {
         return (
 
             <TouchableOpacity style={{ margin: 4 }} onPress={() => {
-                this.props.navigation.navigate('UserProfile', { user_id: item.user_id })
-            }}>
+                this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: item.user_id } })
+            }
+            }>
                 <View style={{ padding: 6, flexDirection: 'row', flex: 1 }} >
                     <View style={{ marginHorizontal: 6, width: '15%' }}>
                         <Image source={{ uri: getProfileImage('user', item.profile_image) }} style={styles.userImage} />
@@ -88,7 +89,7 @@ export default class UserPlayerRowComponent extends React.Component {
                         />
                     </View>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity >
         )
     }
 }

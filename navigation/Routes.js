@@ -75,23 +75,27 @@ function BottomNavigation() {
         options={{
           tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />
         }} />
-      <Tab.Screen name="News" component={FeedNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <Icon name="home" color='green' size={28} />,
-        }}
-      />
-      {/* <Tab.Screen name="Swaps" component={SwapNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />,
-        }} /> */}
+
       <Tab.Screen name="Create" component={CreateStatusNavigator}
         options={{
           tabBarIcon: ({ color }) => <Icon name="plus" color='green' size={28} />,
         }} />
 
+      {/* <Tab.Screen name="Swaps" component={SwapNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Icon name="globe" color='green' size={28} />,
+        }} /> */}
+
+
       <Tab.Screen name="Chat" component={ChatNavigator} options={{
         tabBarIcon: ({ color }) => <Icon name="comment" color='green' size={28} />
       }} />
+
+      <Tab.Screen name="News" component={FeedNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Icon name="home" color='green' size={28} />,
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -488,7 +492,7 @@ function ChatNavigator() {
 
 function ClubsNavigator(navigator) {
   return (
-    <Stack.Navigator screenOptions={{
+    <Stack.Navigator initialRouteName="Clubs" screenOptions={{
       headerTitleStyle: { color: 'white' },
       headerBackTitleStyle: { color: 'white' },
       headerTintColor: 'white',
@@ -500,14 +504,15 @@ function ClubsNavigator(navigator) {
 
     >
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Clubs"
         component={Countries}
         options={{ headerTitle: 'Countries' }}
-      />
+      /> */}
 
       <Stack.Screen
-        name="CountryClubs"
+        // name="CountryClubs"
+        name="Clubs"
         component={Clubs}
         options={{ headerTitle: 'Clubs' }}
       />

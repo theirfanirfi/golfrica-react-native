@@ -22,11 +22,12 @@ export default class Clubs extends React.Component {
     goToClub = id => {
         this.props.navigation.navigate('SingleClub', { club_id: id });
     }
-    fetchClubs = async (country_id) => {
-        let res = await get(this, `clubs/country_clubs/${country_id}/`);
+    fetchClubs = async () => {
+        // let res = await get(this, `clubs/country_clubs/${country_id}/`);
+        let res = await get(this, `clubs/`);
         if (res.status) {
             this.setState({
-                country_id: country_id,
+                // country_id: country_id,
                 clubs: res.response.clubs,
                 isRefreshing: false
             })
@@ -34,13 +35,16 @@ export default class Clubs extends React.Component {
     }
 
     async componentDidMount() {
-        let { country_id } = await this.props.route.params
-        this.fetchClubs(country_id)
+        // let { country_id } = await this.props.route.params
+        this.props.navigation.addListener('focus', async () => {
+            this.setState({ isRefreshing: true }, () => this.fetchClubs())
+        })
+
     }
 
     onRefresh = async () => {
         await this.setState({ isRefreshing: true })
-        this.fetchClubs(this.state.country_id);
+        this.fetchClubs();
 
     }
 
