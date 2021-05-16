@@ -6,6 +6,7 @@ import { get } from '../apis/';
 import ClubRatingComponent from './ClubProfile/ClubRatingComponent';
 import ClubFollowComponentForClubsTab from './ClubProfile/ClubFollowComponentForClubsTab';
 import { getProfileImage } from './shared/utils'
+import ClubFollowComponent from './ClubProfile/ClubFollowComponent';
 
 
 export default class Clubs extends React.Component {

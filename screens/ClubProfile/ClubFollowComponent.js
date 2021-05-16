@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Alert } from 'react-native'
+import { StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { Button } from 'react-native-material-ui';
 
 
@@ -62,6 +62,7 @@ export default class ClubFollowComponent extends React.Component {
     token: null,
     club_id: 0,
     is_followed: 0,
+    is_requesting: false
   }
 
 
@@ -85,14 +86,21 @@ export default class ClubFollowComponent extends React.Component {
   }
 
   async followClub() {
+    this.setState({ is_requesting: true })
+
     const response = await followClub(this, this.state.club_id);
     if (response.status) {
       const res = response.response;
-      if (res.isFollowed) {
-        this.setState({ is_followed: true })
-        Alert.alert('Club Followed.');
+      if (res.message.includes('Followed')) {
+        this.setState({ is_followed: true, is_requesting: false })
+      } else if (res.message.includes('unfollowed')) {
+        this.setState({ is_followed: false, is_requesting: false })
+
       } else {
+        this.setState({ is_requesting: false })
+
         Alert.alert(res.message);
+
       }
     }
   }
@@ -101,13 +109,15 @@ export default class ClubFollowComponent extends React.Component {
     if (this.state.is_followed) {
       return (
         <Button
+          icon={this.state.is_requesting ? <ActivityIndicator size="small" color="black" /> : 'close'}
           raised text="unfollow"
           backgroundColor='white'
           onPress={() => this.followClub()}
         />
       )
     } else {
-      return (<Button icon='add'
+      return (<Button
+        icon={this.state.is_requesting ? <ActivityIndicator size="small" color="black" /> : 'add'}
         raised text="Follow"
         backgroundColor='white'
         onPress={() => this.followClub()}
