@@ -89,7 +89,7 @@ export default class Feed extends React.Component {
 
     goToProfile = (status) => {
         if (status.is_club_status == 1) {
-            this.props.navigation.navigate('CountryClubs', { screen: 'SingleClub', params: { club_id: status.club_id } });
+            this.props.navigation.navigate('clubProfile', { screen: 'SingleClub', params: { club_id: status.club_id } });
 
         } else if (status.is_app_status == 1) {
             // this.props.navigation.navigate('UserProfile', { user_id: status.user_id });

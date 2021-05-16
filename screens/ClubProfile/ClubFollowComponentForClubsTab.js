@@ -62,7 +62,7 @@ export default class ClubFollowComponentForClubsTab extends React.Component {
   state = {
     token: null,
     club_id: 0,
-    is_followed: 0,
+    is_followed: false,
   }
 
 
@@ -89,12 +89,18 @@ export default class ClubFollowComponentForClubsTab extends React.Component {
     const response = await followClub(this, this.state.club_id);
     if (response.status) {
       const res = response.response;
-      if (!res.isError) {
-        this.setState({ is_followed: res.isFollowed })
-        Alert.alert(res.message);
+      if (res.message.includes('Followed')) {
+        console.log('followed')
+        this.setState({ is_followed: true })
+      } else if (res.message.includes('unfollowed')) {
+        console.log('unfollowed')
+        this.setState({ is_followed: false })
+
       } else {
         Alert.alert(res.message);
+
       }
+      // Alert.alert(res.message);
     }
   }
 
@@ -133,12 +139,36 @@ export default class ClubFollowComponentForClubsTab extends React.Component {
   }
 
   render() {
+    if (this.state.is_followed) {
+      return (
+        <Button
+          style={{ fontSize: 10, color: Colors.green.white }}
+          containerStyle={{
 
-    return (
-      <>
-        {this.getFollowBtn()}
+            padding: 10, height: 34,
+            backgroundColor: Colors.green.greencolor
+          }}
+          styleDisabled={{ color: 'red' }}
+          onPress={() => this.followClub()}>
+          unfollow
+        </Button>
+      )
+    } else {
+      return (
 
-      </>
-    )
+        <Button
+          style={{ fontSize: 10, color: Colors.green.white }}
+          containerStyle={{
+
+            padding: 10, height: 34,
+            backgroundColor: Colors.green.greencolor
+          }}
+          styleDisabled={{ color: 'red' }}
+          onPress={() => this.followClub()}>
+          Follow
+        </Button>
+
+      )
+    }
   }
 }

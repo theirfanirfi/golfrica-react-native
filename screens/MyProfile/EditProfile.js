@@ -261,7 +261,12 @@ export default class EditProfile extends Component {
         let response = await postWithImages(this, 'user/my_profile', form)
         if (response.status) {
             let res = response.response
-            Alert.alert(res.message);
+            if (res.isUpdated) {
+                // this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: this.state.user.user_id } })
+                this.props.navigation.pop()
+            } else {
+                alert('Error occurred');
+            }
         }
     }
 

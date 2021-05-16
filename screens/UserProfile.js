@@ -127,6 +127,14 @@ export default class UserProfile extends Component {
                 isMe: res.isMe,
                 isRefreshing: false
             });
+
+            if (res.isMe) {
+                this.props.navigation.setOptions({
+                    headerTitle: 'My Profile',
+                    headerTitleStyle: { fontSize: 16, color: 'white' },
+                    headerRight: null
+                });
+            }
         }
     }
 

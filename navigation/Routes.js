@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
-import Home from '../screens/Home';
 import Feed from '../screens/Feed'
 import SwapsFeed from '../screens/SwapsFeed'
 import SwapWithFollowedComponent from '../screens/Swaps/SwapWithFollowedComponent'
@@ -15,7 +14,6 @@ import Countries from '../screens/Countries'
 import Clubs from '../screens/Clubs'
 import Chat from '../screens/Chat'
 import Chats from '../screens/Chats'
-import { Badge } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableOpacity, View } from 'react-native'
 import SingleClub from '../screens/SingleClub'
@@ -34,6 +32,18 @@ import Colors from '../constants/Colors'
 
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+goToMyProfile = async (navigation) => {
+  await AsyncStorage.getItem('user').then(item => {
+    if (item !== null) {
+      let user = JSON.parse(item)
+      navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: user.user_id } });
+    } else {
+      alert('You are not logged in.')
+    }
+  });
+}
 
 function TabBarIcon(name, color) {
   let size = 30;
@@ -117,7 +127,8 @@ function FeedNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('News', { screen: 'EditProfile' })
+                // navigator.navigation.navigate('News', { screen: 'EditProfile' })
+                goToMyProfile(navigator.navigation);
               }}
               name="user-circle-o"
               color="white"
@@ -202,7 +213,8 @@ function playersNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('News', { screen: 'EditProfile' })
+                // navigator.navigation.navigate('News', { screen: 'EditProfile' })
+                goToMyProfile(navigator.navigation);
               }}
               name="user-circle-o"
               color="white"
@@ -257,7 +269,8 @@ function profileNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                // navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                goToMyProfile(navigator.navigation);
               }}
               name="user-circle-o"
               color="white"
@@ -304,7 +317,8 @@ function singleFeedNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                // navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                goToMyProfile(navigator.navigation);
               }}
               name="user-circle-o"
               color="white"
@@ -483,7 +497,9 @@ function ChatNavigator() {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                // navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                goToMyProfile(navigator.navigation)
+
               }}
               name="user-circle-o"
               color="white"
@@ -529,7 +545,9 @@ function ClubsNavigator(navigator) {
             <Bell navigation={navigator.navigation} />
             <Icon
               onPress={() => {
-                navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                // navigator.navigation.navigate('editProfile', { screen: 'EditProfile' })
+                goToMyProfile(navigator.navigation)
+
               }}
               name="user-circle-o"
               color="white"
@@ -650,6 +668,43 @@ function SplashNavigator() {
   )
 }
 
+function clubProfile(navigator) {
+  return (
+    <Stack.Navigator initialRouteName="SingleClub"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleStyle: { color: 'white' },
+        headerStyle: { backgroundColor: Colors.green.greencolor },
+        headerBackTitleStyle: { color: 'white' },
+        headerTintColor: 'white',
+        headerBackTitle: 'Back',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Bell navigation={navigator.navigation} />
+            <Icon
+              onPress={() => {
+                // navigator.navigation.navigate('profile', { screen: 'PlayerProfile' })
+                goToMyProfile(navigator.navigation)
+              }}
+              name="user-circle-o"
+              color="white"
+              size={30}
+              style={{ marginRight: 14 }}
+            />
+          </View>
+        )
+      }}>
+      <Stack.Screen
+        name="SingleClub"
+        component={SingleClub}
+        options={{ headerTitle: 'Golf Club', headerBackTitle: 'Back' }}
+      />
+    </Stack.Navigator>
+  )
+}
+
 export default function RootNavigator() {
   return (
     <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
@@ -659,6 +714,7 @@ export default function RootNavigator() {
       <Stack.Screen name="profile" component={profileNavigator} />
       <Stack.Screen name="singleFeed" component={singleFeedNavigator} />
       <Stack.Screen name="editProfile" component={editProfileNavigator} />
+      <Stack.Screen name="clubProfile" component={clubProfile} />
     </Stack.Navigator>
   )
 }
