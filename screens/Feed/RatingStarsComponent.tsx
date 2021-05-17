@@ -4,7 +4,7 @@ import { View, Dimensions, Text, TextInput, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import base64 from 'react-native-base64';
 import { rateAndCommentStatus } from '../../apis/';
-
+import { Button } from 'react-native-elements'
 
 import Modal, { ModalContent, FadeAnimation, ModalTitle, ModalFooter, ModalButton } from 'react-native-modals';
 export default class RatingStarsComponent extends React.PureComponent {
@@ -93,9 +93,11 @@ export default class RatingStarsComponent extends React.PureComponent {
 
                         />
                     </ModalContent>
-                    <ModalFooter>
-                        <ModalButton text="Cancel" onPress={() => { this.setState({ dialogVisibility: false }); }} />
-                        <ModalButton text="Rate" onPress={() => { this.rateStatus(); }} />
+                    <ModalFooter style={{ justifyContent: 'space-around', padding: 4 }}>
+                        <Button title="Cancel" buttonStyle={{ borderWidth: 0 }} type="outline" onPress={() => { this.setState({ dialogVisibility: false }); }} />
+                        <Button title="  Rate  " buttonStyle={{ borderWidth: 0 }} type="outline" onPress={() => { this.rateStatus(); }} />
+                        {/* // <ModalButton text="Cancel" onPress={() => { this.setState({ dialogVisibility: false }); }} />
+                        // <ModalButton text="Rate" onPress={() => { this.rateStatus(); }} /> */}
 
                     </ModalFooter>
                 </Modal>
