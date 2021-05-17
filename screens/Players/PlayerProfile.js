@@ -123,6 +123,8 @@ export default class PlayerProfile extends Component {
   }
 
 
+
+
   renderHeader = () => {
     return (
       <View style={styles.headerContainer}>

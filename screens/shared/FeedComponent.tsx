@@ -20,7 +20,8 @@ export default class FeedComponent extends React.Component {
         offset: 0,
         type: null,
         token: null,
-        id: 0
+        id: 0,
+        refreshAfterCallback: true
     };
 
     async getStatuses() {
@@ -31,19 +32,27 @@ export default class FeedComponent extends React.Component {
         }
     }
     async componentDidMount() {
-        const { id, type } = await this.props
-        this.setState({ type: type, id: id });
+        const { id, type, refreshAfterCallback } = await this.props
+        this.setState({ type: type, id: id, refreshAfterCallback: refreshAfterCallback });
 
         setTimeout(() => this.getStatuses(), 3000)
 
     }
 
     static getDerivedStateFromProps(props, current_state) {
-        console.log('feed id ' + props.id)
         if (current_state.id != props.id && props.id != undefined) {
             return {
                 id: props.id,
-                type: props.type
+                type: props.type,
+                refreshAfterCallback: props.refreshAfterCallback
+            }
+        }
+
+        if (current_state.refreshAfterCallback != props.refreshAfterCallback && props.refreshAfterCallback != undefined) {
+            return {
+                id: props.id,
+                type: props.type,
+                refreshAfterCallback: props.refreshAfterCallback
             }
         }
         return null
@@ -123,7 +132,7 @@ export default class FeedComponent extends React.Component {
                                         </View>
 
 
-                                        <Text onPress={() => this.props.navigation.navigate('Feed', { screen: 'SingleFeed', params: { status_id: status.status_id } })} style={styles.description}>{status.status_description}</Text>
+                                        <Text onPress={() => this.props.navigation.navigate('singleFeed', { screen: 'SingleFeed', params: { status_id: status.status_id } })} style={styles.description}>{status.status_description}</Text>
 
 
                                         <CarouselComponent media={status.status_media} />

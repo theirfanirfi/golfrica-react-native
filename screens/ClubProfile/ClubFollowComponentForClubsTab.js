@@ -75,7 +75,7 @@ export default class ClubFollowComponentForClubsTab extends React.Component {
   }
 
   static getDerivedStateFromProps(props, current_state) {
-    if (current_state.is_followed !== props.is_followed && props.is_followed !== undefined) {
+    if (current_state.club_id !== props.club_id && props.club_id !== undefined) {
       return {
         club_id: props.club_id,
         is_followed: props.is_followed,

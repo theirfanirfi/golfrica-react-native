@@ -112,12 +112,14 @@ export default class UserProfile extends Component {
         followers: 0,
         isMe: false,
         isRefreshing: true,
+        user_id: 0,
+        refreshFeedBackAfterCallBack: true
     };
 
-    async componentDidMount() {
-        const { user_id } = this.props.route.params;
-        const response = await getUserProfile(this, user_id);
-        console.log(response)
+    async getProfile(user_id) {
+        this.setState({ isRefreshing: true, refreshFeedBackAfterCallBack: !this.state.refreshFeedBackAfterCallBack })
+
+        const response = await getUserProfile(this, this.state.user_id);
         if (response.status) {
             const res = response.response;
             let profile = res.user_profile[0]
@@ -136,6 +138,18 @@ export default class UserProfile extends Component {
                 });
             }
         }
+    }
+
+    async componentDidMount() {
+        const { user_id } = this.props.route.params;
+        this.setState({ user_id: user_id }, () => this.getProfile())
+
+
+    }
+
+    profileCallBack = () => {
+        console.log('callback called')
+        this.getProfile()
     }
 
     onFollowUnfollow = (context, action) => {
@@ -260,7 +274,7 @@ export default class UserProfile extends Component {
                             <View style={{ margin: 12, bottom: -102 }}>
                                 {this.state.isMe ? (
                                     <Button
-                                        onPress={() => this.props.navigation.navigate('editProfile', { screen: 'EditProfile' })}
+                                        onPress={() => this.props.navigation.navigate('editProfile', { screen: 'EditProfile', params: { onGoBack: () => this.profileCallBack() } })}
                                         buttonStyle={{ borderColor: 'green' }}
                                         titleStyle={{ color: 'green' }}
                                         title="Edit Profile"
@@ -299,7 +313,7 @@ export default class UserProfile extends Component {
                 statusBarHeight={Platform.OS === 'ios' ? 0 : 0}
             >
                 <View style={{ height: 2000, backgroundColor: 'white' }}>
-                    <FeedComponent navigation={this.props.navigation} type="user" id={this.state.profile.user_id} />
+                    <FeedComponent refreshAfterCallback={this.state.refreshFeedBackAfterCallBack} navigation={this.props.navigation} type="user" id={this.state.profile.user_id} />
                 </View>
             </CollapsibleHeaderScrollView>
         );

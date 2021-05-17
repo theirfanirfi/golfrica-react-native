@@ -99,6 +99,9 @@ const styles = StyleSheet.create({
 });
 
 import { getProfileImage } from '../shared/utils';
+import { ActivityIndicator } from "react-native";
+
+
 
 export default class EditProfile extends Component {
 
@@ -116,7 +119,8 @@ export default class EditProfile extends Component {
         cover_image_upload: null,
         profile_image: null,
         profile_image_upload: null,
-        change_image_selection: 'profile'
+        change_image_selection: 'profile',
+        is_requesting: true,
     }
 
     removeValue = async () => {
@@ -241,6 +245,7 @@ export default class EditProfile extends Component {
     }
 
     saveChanges = async () => {
+        this.setState({ is_requesting: true });
         let form = new FormData()
         if (this.state.profile_image_upload != null) {
             form.append("profile_image", this.state.profile_image_upload);
@@ -262,12 +267,33 @@ export default class EditProfile extends Component {
         if (response.status) {
             let res = response.response
             if (res.isUpdated) {
+                console.log(res);
                 // this.props.navigation.navigate('profile', { screen: 'PlayerProfile', params: { user_id: this.state.user.user_id } })
-                this.props.navigation.pop()
+                // this.props.navigation.getParams('callBack')();
+                // this.props.navigation.goBack()
+                this.setState({ is_requesting: false }, () => this.storeUserData(res.user));
+
+
+
             } else {
+                this.setState({ is_requesting: false });
                 alert('Error occurred');
             }
+        } else {
+            this.setState({ is_requesting: false });
+            alert('Error occurred');
         }
+    }
+
+    storeUserData = async (user) => {
+        try {
+            await AsyncStorage.setItem('user', JSON.stringify(user))
+            this.props.route.params.onGoBack();
+            this.props.navigation.goBack();
+        } catch (e) {
+            console.log(e)
+        }
+
     }
 
     async componentDidMount() {
@@ -280,7 +306,10 @@ export default class EditProfile extends Component {
                 lastname: response.response.last_name,
                 email: response.response.email,
                 profile_description: response.response.profile_description,
+                is_requesting: false
             });
+        } else {
+            this.setState({ is_requesting: false });
         }
     }
 
@@ -413,6 +442,16 @@ export default class EditProfile extends Component {
     }
 
     render() {
+
+        if (this.state.is_requesting) {
+            return (
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color='green' style={{ alignSelf: 'center' }} />
+                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>Changes are being made, please wait</Text>
+                </View>
+            )
+        }
+
         return (
             <>
                 <ScrollView style={styles.scroll}>
