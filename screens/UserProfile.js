@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import { Button, Icon } from "react-native-elements";
+/* eslint-disable react-native/no-inline-styles */
+import React, { Component } from 'react';
+import { Button, Icon } from 'react-native-elements';
 
 import {
     FlatList,
@@ -12,15 +13,15 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ActivityIndicator
-} from "react-native";
-import Colors from "../constants/Colors";
-import { getUserProfile } from "../apis/";
+    ActivityIndicator,
+} from 'react-native';
+import Colors from '../constants/Colors';
+import { getUserProfile } from '../apis/';
 const cover_image = require('./images/golfcover.jpg');
-import FeedComponent from './shared/FeedComponent'
+import FeedComponent from './shared/FeedComponent';
 const styles = StyleSheet.create({
     cardContainer: {
-        backgroundColor: "#FFF",
+        backgroundColor: '#FFF',
         borderWidth: 0,
         flex: 1,
         margin: 0,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     emailContainer: {
-        backgroundColor: "#FFF",
+        backgroundColor: '#FFF',
         flex: 1,
         paddingTop: 30,
     },
@@ -40,45 +41,45 @@ const styles = StyleSheet.create({
     },
     headerContainer: {},
     headerColumn: {
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
         ...Platform.select({
             ios: {
-                alignItems: "center",
+                alignItems: 'center',
                 elevation: 1,
                 marginTop: -1,
             },
             android: {
-                alignItems: "center",
+                alignItems: 'center',
             },
         }),
     },
     placeIcon: {
-        color: "white",
+        color: 'white',
         fontSize: 26,
     },
     scroll: {
-        backgroundColor: "#FFF",
+        backgroundColor: '#FFF',
     },
     telContainer: {
-        backgroundColor: "#FFF",
+        backgroundColor: '#FFF',
         flex: 1,
         paddingTop: 30,
     },
     userAddressRow: {
-        alignItems: "center",
-        flexDirection: "row",
+        alignItems: 'center',
+        flexDirection: 'row',
     },
     userCityRow: {
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
     },
     userCityText: {
-        color: "#A5A5A5",
+        color: '#A5A5A5',
         fontSize: 15,
-        fontWeight: "600",
-        textAlign: "center",
+        fontWeight: '600',
+        textAlign: 'center',
     },
     userImage: {
-        borderColor: "#FFF",
+        borderColor: '#FFF',
         borderRadius: 85,
         borderWidth: 3,
         height: 100,
@@ -86,24 +87,21 @@ const styles = StyleSheet.create({
         width: 100,
     },
     userNameText: {
-        color: "#000",
+        color: '#000',
         fontSize: 22,
-        fontWeight: "bold",
+        fontWeight: 'bold',
         paddingBottom: 8,
-        textAlign: "center",
+        textAlign: 'center',
     },
 });
 
 import { getProfileImage } from './shared/utils';
-import { CollapsibleHeaderScrollView } from 'react-native-collapsible-header-views'
-import FollowUnFollowBtnComponent from '../components/FollowUnFollowBtnComponent'
+import { CollapsibleHeaderScrollView } from 'react-native-collapsible-header-views';
+import FollowUnFollowBtnComponent from '../components/FollowUnFollowBtnComponent';
 export default class UserProfile extends Component {
-
-
-
     state = {
         image:
-            "https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg",
+            'https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg',
         profile: [],
         user: [],
         user_statuses: [],
@@ -113,28 +111,31 @@ export default class UserProfile extends Component {
         isMe: false,
         isRefreshing: true,
         user_id: 0,
-        refreshFeedBackAfterCallBack: true
+        refreshFeedBackAfterCallBack: true,
     };
 
     async getProfile(user_id) {
-        this.setState({ isRefreshing: true, refreshFeedBackAfterCallBack: !this.state.refreshFeedBackAfterCallBack })
+        this.setState({
+            isRefreshing: true,
+            refreshFeedBackAfterCallBack: !this.state.refreshFeedBackAfterCallBack,
+        });
 
         const response = await getUserProfile(this, this.state.user_id);
         if (response.status) {
             const res = response.response;
-            let profile = res.user_profile[0]
+            let profile = res.user_profile[0];
             this.setState({
                 profile: profile,
                 followers: profile.followers,
                 isMe: res.isMe,
-                isRefreshing: false
+                isRefreshing: false,
             });
 
             if (res.isMe) {
                 this.props.navigation.setOptions({
                     headerTitle: 'My Profile',
                     headerTitleStyle: { fontSize: 16, color: 'white' },
-                    headerRight: null
+                    headerRight: null,
                 });
             }
         }
@@ -142,29 +143,23 @@ export default class UserProfile extends Component {
 
     async componentDidMount() {
         const { user_id } = this.props.route.params;
-        this.setState({ user_id: user_id }, () => this.getProfile())
-
-
+        this.setState({ user_id: user_id }, () => this.getProfile());
     }
 
     profileCallBack = () => {
-        console.log('callback called')
-        this.getProfile()
-    }
+        console.log('callback called');
+        this.getProfile();
+    };
 
     onFollowUnfollow = (context, action) => {
-        if (action == "follow") {
-            context.setState({ followers: context.state.followers + 1 })
+        if (action == 'follow') {
+            context.setState({ followers: context.state.followers + 1 });
         } else {
             if (context.state.followers > 0) {
-                context.setState({ followers: context.state.followers - 1 })
-
+                context.setState({ followers: context.state.followers - 1 });
             }
         }
-    }
-
-
-
+    };
 
     renderTabs() {
         return (
@@ -172,50 +167,49 @@ export default class UserProfile extends Component {
                 style={{
                     height: 50,
                     flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     marginTop: 1,
-                }}
-            >
+                }}>
                 <View
                     style={{
-                        justifyContent: "center",
+                        justifyContent: 'center',
                         flex: 1,
-                        flexDirection: "row",
+                        flexDirection: 'row',
                         backgroundColor: Colors.green.greencolor,
-                    }}
-                >
+                    }}>
                     <TouchableOpacity
-                        style={{ justifyContent: "center" }}
+                        style={{ justifyContent: 'center' }}
                         onPress={() => {
-                            this.props.navigation.navigate("PlayerFollowers", {
+                            this.props.navigation.navigate('PlayerFollowers', {
                                 id: this.state.player.player_id,
-                                type: 'player'
+                                type: 'player',
                             });
-                        }}
-                    >
-                        <Text style={{ fontSize: 18, alignSelf: "center", color: "white" }}>{this.state.profile.followers} Swaps</Text>
+                        }}>
+                        <Text style={{ fontSize: 18, alignSelf: 'center', color: 'white' }}>
+                            {this.state.profile.followers} Swaps
+                        </Text>
                     </TouchableOpacity>
                 </View>
 
                 <View
                     style={{
-                        justifyContent: "center",
+                        justifyContent: 'center',
                         flex: 1,
-                        flexDirection: "row",
+                        flexDirection: 'row',
                         backgroundColor: Colors.green.greencolor,
-                    }}
-                >
+                    }}>
                     <TouchableOpacity
-                        style={{ justifyContent: "center" }}
+                        style={{ justifyContent: 'center' }}
                         onPress={() => {
-                            this.props.navigation.navigate("PlayerFollowers", {
+                            this.props.navigation.navigate('PlayerFollowers', {
                                 id: this.state.player.player_id,
-                                type: 'player'
+                                type: 'player',
                             });
-                        }}
-                    >
-                        <Text style={{ fontSize: 18, alignSelf: "center", color: "white" }}>{this.state.profile.followers} Followers</Text>
+                        }}>
+                        <Text style={{ fontSize: 18, alignSelf: 'center', color: 'white' }}>
+                            {this.state.profile.followers} Followers
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -224,12 +218,11 @@ export default class UserProfile extends Component {
 
     getUserProfileImage = () => {
         return getProfileImage('user', this.state.profile.profile_image);
-    }
+    };
 
     render() {
-
         if (this.state.isRefreshing) {
-            return <ActivityIndicator size="large" color={Colors.green.greencolor} />
+            return <ActivityIndicator size="large" color={Colors.green.greencolor} />;
         }
 
         return (
@@ -246,39 +239,54 @@ export default class UserProfile extends Component {
             <CollapsibleHeaderScrollView
                 CollapsibleHeaderComponent={
                     <View>
-                        <View style={{
-                            flexDirection: 'row'
-                        }}>
-                            <Image style={{ height: 120, position: 'absolute', left: 0, top: -12, width: '100%' }} source={{ uri: getProfileImage('user', this.state.profile.cover_image) }} />
-
-
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                bottom: -52
-
+                        <View
+                            style={{
+                                flexDirection: 'row',
                             }}>
+                            <Image
+                                style={{
+                                    height: 120,
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: -12,
+                                    width: '100%',
+                                }}
+                                source={{
+                                    uri: getProfileImage('user', this.state.profile.cover_image),
+                                }}
+                            />
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    bottom: -52,
+                                }}>
                                 <Image
                                     style={styles.userImage}
                                     source={{ uri: this.getUserProfileImage() }}
                                 />
                                 <Text style={{ fontSize: 20, marginLeft: 12 }}>
-                                    {this.state.profile.first_name + ' ' + this.state.profile.last_name}
+                                    {this.state.profile.first_name +
+                                        ' ' +
+                                        this.state.profile.last_name}
                                 </Text>
                             </View>
-
-
-
-
 
                             <View style={{ margin: 12, bottom: -102 }}>
                                 {this.state.isMe ? (
                                     <Button
-                                        onPress={() => this.props.navigation.navigate('editProfile', { screen: 'EditProfile', params: { onGoBack: () => this.profileCallBack() } })}
+                                        onPress={() =>
+                                            this.props.navigation.navigate('editProfile', {
+                                                screen: 'EditProfile',
+                                                params: { onGoBack: () => this.profileCallBack() },
+                                            })
+                                        }
                                         buttonStyle={{ borderColor: 'green' }}
                                         titleStyle={{ color: 'green' }}
                                         title="Edit Profile"
-                                        type="outline" />
+                                        type="outline"
+                                    />
                                 ) : (
                                     <FollowUnFollowBtnComponent
                                         is_followed={this.state.profile.is_followed}
@@ -286,14 +294,19 @@ export default class UserProfile extends Component {
                                         actionCallback={this.onFollowUnfollow}
                                         user_id={this.state.profile.user_id}
                                     />
-                                )
-                                }
-
-
+                                )}
                             </View>
                         </View>
 
-                        <Text style={{ alignSelf: 'flex-start', top: 40, margin: 16, textAlign: 'justify' }}>{this.state.profile.profile_description}</Text>
+                        <Text
+                            style={{
+                                alignSelf: 'flex-start',
+                                top: 40,
+                                margin: 16,
+                                textAlign: 'justify',
+                            }}>
+                            {this.state.profile.profile_description}
+                        </Text>
 
                         {/* <View style={{ top: 40, flexDirection: 'row', padding: 12 }}>
                             <Icon type="ionicon" name="location-outline" size={18} />
@@ -301,19 +314,45 @@ export default class UserProfile extends Component {
                         </View > */}
 
                         <View style={{ top: 30, flexDirection: 'row', padding: 12 }}>
-                            <Text style={{ fontWeight: 'bold' }}>{this.state.profile.followed} </Text>
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.profile.followed}{' '}
+                            </Text>
                             <Text>Following</Text>
 
-                            <Text style={{ fontWeight: 'bold', marginLeft: 14 }}>{this.state.followers} </Text>
+                            <Text style={{ fontWeight: 'bold', marginLeft: 14 }}>
+                                {this.state.followers}{' '}
+                            </Text>
                             <Text>Followers</Text>
-                        </View >
-                    </ View>
+                        </View>
+
+                        <View style={{ top: 30, flexDirection: 'row', justifyContent: 'center' }}>
+                            {this.state.profile.facebook != null &&
+                                <TouchableOpacity onPress={() => Linking.openURL(this.state.profile.facebook)}>
+                                    <Icon type="fontawesome" name="facebook" />
+                                </TouchableOpacity>
+                            }
+                            {this.state.profile.twitter != null &&
+                                <TouchableOpacity onPress={() => Linking.openURL(this.state.profile.twitter)}>
+                                    <Icon type="ionicon" name="logo-twitter" />
+                                </TouchableOpacity>
+                            }
+                            {this.state.profile.instagram != null &&
+                                <TouchableOpacity onPress={() => Linking.openURL(this.state.profile.instagram)}>
+                                    <Icon type="ionicon" name="logo-instagram" />
+                                </TouchableOpacity>
+                            }
+                        </View>
+                    </View>
                 }
                 headerHeight={350}
-                statusBarHeight={Platform.OS === 'ios' ? 0 : 0}
-            >
+                statusBarHeight={Platform.OS === 'ios' ? 0 : 0}>
                 <View style={{ height: 2000, backgroundColor: 'white' }}>
-                    <FeedComponent refreshAfterCallback={this.state.refreshFeedBackAfterCallBack} navigation={this.props.navigation} type="user" id={this.state.profile.user_id} />
+                    <FeedComponent
+                        refreshAfterCallback={this.state.refreshFeedBackAfterCallBack}
+                        navigation={this.props.navigation}
+                        type="user"
+                        id={this.state.profile.user_id}
+                    />
                 </View>
             </CollapsibleHeaderScrollView>
         );

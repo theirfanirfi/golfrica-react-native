@@ -17,7 +17,8 @@ export default class Clubs extends React.Component {
         token: null,
         isLoggedIn: false,
         isRefreshing: true,
-        image: 'https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg'
+        image: 'https://nation.com.pk/print_images/medium/2019-10-13/4-golf-clubs-compete-to-represent-sindh-1570912179-4900.jpg',
+        offset: 0,
     }
 
     goToClub = id => {
@@ -25,7 +26,7 @@ export default class Clubs extends React.Component {
     }
     fetchClubs = async () => {
         // let res = await get(this, `clubs/country_clubs/${country_id}/`);
-        let res = await get(this, `clubs/`);
+        let res = await get(this, `clubs/?offset=` + this.state.offset);
         if (res.status) {
             this.setState({
                 // country_id: country_id,
@@ -49,6 +50,16 @@ export default class Clubs extends React.Component {
 
     }
 
+    getMoreTen = async () => {
+        await this.setState({ offset: this.state.offset += 1 });
+        const res = await get(this, 'clubs/?offset=' + this.state.offset);
+        if (res.status) {
+            this.setState({ clubs: this.state.clubs.concat(res.response.clubs) });
+        } else {
+            this.setState({ isRefreshing: false, isLoading: false })
+        }
+    }
+
     render() {
         return (
             <View style={{ backgroundColor: 'white', height: '100%' }}>
@@ -69,13 +80,17 @@ export default class Clubs extends React.Component {
                     refreshing={this.state.isRefreshing}
                     onRefresh={() => this.onRefresh()}
                     keyExtractor={(item) => { return item.club_id; }}
+                    onEndReachedThreshold={0}
+                    onEndReached={this.getMoreTen}
                     renderItem={({ item }) => {
                         return (
 
                             <View style={{
-                                flex: 1, shadowColor: 'black', shadowOpacity: 0.3, borderWidth: Platform.OS == "ios" ? 0.5 : 0, borderColor: 'darkgray', padding: 10, borderRadius: 2,
-                                flexDirection: 'row', alignItems: 'center', elevation: 3, alignContents: 'center',
+                                flexWrap: 'wrap', flex: 1, shadowColor: 'black', shadowOpacity: 0.3,
+                                borderWidth: Platform.OS == "ios" ? 0.5 : 0, borderColor: 'darkgray', padding: 10, borderRadius: 2,
+                                flexDirection: 'row', elevation: 3,
                                 marginHorizontal: 8, marginVertical: 8,
+                                justifyContent: 'space-between'
                             }}>
 
                                 <View style={{ flexDirection: 'column' }}>
@@ -89,8 +104,8 @@ export default class Clubs extends React.Component {
                                 </View>
 
 
-                                <View style={{ flexDirection: 'column', marginHorizontal: 10 }}>
-                                    <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={() => this.goToClub(item.club_id)}>
+                                <View style={{ flexDirection: 'column', marginHorizontal: 10, }}>
+                                    <TouchableOpacity style={{}} onPress={() => this.goToClub(item.club_id)}>
                                         <Text style={styles.title}>{item.club_name}</Text>
                                     </TouchableOpacity>
 
@@ -98,22 +113,22 @@ export default class Clubs extends React.Component {
 
                                     <Text onPress={() => this.goToClub(1)}>{item.total_reviews} Reviews</Text>
 
-                                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', marginTop: 6 }}>
+                                    <View style={{ alignSelf: 'flex-start', justifyContent: 'space-evenly', flexDirection: 'row', marginTop: 6 }}>
                                         <Icon name="people-outline" />
                                         <Text style={{ marginTop: 2 }}> {item.followers}</Text>
 
+
                                     </View>
 
-                                </View>
 
+
+                                </View>
                                 <View style={{
-                                    flexDirection: 'row', alignSelf: 'stretch',
-                                    justifyContent: 'space-evenly', alignItems: 'center', marginLeft: 40
+                                    alignSelf: 'flex-end', justifyContent: 'flex-end'
                                 }}>
 
                                     <ClubFollowComponentForClubsTab club_id={item.club_id} is_followed={item.is_followed} />
                                 </View>
-
                             </View>
                         )
                     }

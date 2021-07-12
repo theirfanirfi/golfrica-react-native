@@ -121,6 +121,9 @@ export default class EditProfile extends Component {
         profile_image_upload: null,
         change_image_selection: 'profile',
         is_requesting: true,
+        facebook: '',
+        instagram: '',
+        twitter: '',
     }
 
     removeValue = async () => {
@@ -262,6 +265,9 @@ export default class EditProfile extends Component {
         form.append("lastname", this.state.lastname);
         form.append("bio", base64.encode(this.state.profile_description));
         form.append("email", this.state.email);
+        form.append("facebook", this.state.facebook);
+        form.append("instagram", this.state.instagram);
+        form.append("twitter", this.state.twitter);
 
         let response = await postWithImages(this, 'user/my_profile', form)
         if (response.status) {
@@ -306,7 +312,10 @@ export default class EditProfile extends Component {
                 lastname: response.response.last_name,
                 email: response.response.email,
                 profile_description: response.response.profile_description,
-                is_requesting: false
+                is_requesting: false,
+                facebook: response.response.facebook,
+                twitter: response.response.twitter,
+                instagram: response.response.instagram,
             });
         } else {
             this.setState({ is_requesting: false });
@@ -423,6 +432,47 @@ export default class EditProfile extends Component {
 
                         errorMessage='*'
                         onChangeText={(text) => this.setState({ email: text })}
+                    />
+
+                    <Text
+                        style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 30 }}
+                    >Social Media
+                    </Text>
+
+                    <Text style={{ fontSize: 14, marginTop: 12 }}>Facebook Profile Link</Text>
+
+                    <Input
+                        placeholder='Facebook Profile Link'
+                        value={this.state.facebook}
+                        errorStyle={{ color: 'red' }}
+                        leftIcon={{ type: 'font-awesome', name: 'facebook', color: 'lightgray' }}
+
+                        errorMessage='*'
+                        onChangeText={(text) => this.setState({ facebook: text })}
+                    />
+
+                    <Text style={{ fontSize: 14, marginTop: 12 }}>Instagram Profile Link</Text>
+
+                    <Input
+                        placeholder='Instagram Profile Link'
+                        value={this.state.instagram}
+                        errorStyle={{ color: 'red' }}
+                        leftIcon={{ type: 'font-awesome', name: 'instagram', color: 'lightgray' }}
+
+                        errorMessage='*'
+                        onChangeText={(text) => this.setState({ instagram: text })}
+                    />
+
+                    <Text style={{ fontSize: 14, marginTop: 12 }}>Twitter Profile Link</Text>
+
+                    <Input
+                        placeholder='Twitter Profile Link'
+                        value={this.state.twitter}
+                        errorStyle={{ color: 'red' }}
+                        leftIcon={{ type: 'font-awesome', name: 'twitter', color: 'lightgray' }}
+
+                        errorMessage='*'
+                        onChangeText={(text) => this.setState({ twitter: text })}
                     />
 
                     <Button title="Save changes" onPress={() => this.saveChanges()} buttonStyle={{ backgroundColor: '#066E31' }} />

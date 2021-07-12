@@ -23,6 +23,9 @@ export default class ActionsNotification extends React.Component {
             } else {
                 this.setState({ isLoading: false, isNotFound: true })
             }
+        } else {
+            this.setState({ isLoading: false, isNotFound: true })
+
         }
     }
 
@@ -69,7 +72,7 @@ export default class ActionsNotification extends React.Component {
 
         if (this.state.isNotFound) {
             return (
-                <View style={{ width: '100%', height: '100%', backgroundColor: 'white', justifyContent: 'center', flexDirection: 'column', flex: 1, alignContent: 'center' }}>
+                <View style={{ backgroundColor: 'white', justifyContent: 'center', flex: 1 }}>
                     <Text style={{ alignSelf: 'center', fontSize: 18 }}>No Notification for you at the moment</Text>
                 </View>
             )

@@ -25,12 +25,12 @@ export default class Feed extends React.Component {
 
     async fetchStatuses() {
         const ms = Date.now();
-        console.log("before: " + this.state.statuses.length)
+        console.log("before: " + this.state.statuses.length);
         const statuses = await get(this, 'statuses/?offset=0&ms=' + ms);
         if (statuses.status) {
-            const res = statuses.response
+            const res = statuses.response;
             this.setState({ statuses: res.statuses, isRefreshing: false, isLoading: false, extraData: !this.state.extraData }, () => {
-                console.log("after: " + this.state.statuses.length)
+                // console.log("after: " + this.state.statuses.length)
 
             });
 
