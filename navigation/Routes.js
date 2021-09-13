@@ -529,7 +529,7 @@ function ChatNavigator() {
 
 function ClubsNavigator(navigator) {
   return (
-    <Stack.Navigator initialRouteName="Clubs"
+    <Stack.Navigator initialRouteName="Countries"
 
       screenOptions={{
         gestureEnabled: true,
@@ -560,15 +560,15 @@ function ClubsNavigator(navigator) {
 
     >
 
-      {/* <Stack.Screen
-        name="Clubs"
+      <Stack.Screen
+        name="Countries"
         component={Countries}
         options={{ headerTitle: 'Countries' }}
-      /> */}
+      />
 
       <Stack.Screen
-        // name="CountryClubs"
-        name="Clubs"
+        name="CountryClubs"
+        // name="Clubs"
         component={Clubs}
         options={{ headerTitle: 'Clubs' }}
       />

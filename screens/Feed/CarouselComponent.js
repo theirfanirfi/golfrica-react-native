@@ -53,17 +53,25 @@ export default class CarouselComponent extends React.PureComponent {
             let jMedia = JSON.parse(props.media);
             let VImages = [];
             if (jMedia != null) {
-                if (jMedia.images.length > 0) {
-                    jMedia.images.map((element, index) => {
-                        VImages.push({
-                            "uri": element.includes('http://') ? element : getEndPointUrl() + '/static/user/status/' + element
+                if (jMedia.images != null) {
+                    if (jMedia.images.length > 0) {
+                        jMedia.images.map((element, index) => {
+                            if (element != undefined) {
+                                VImages.push({
+                                    "uri": element.includes('http://') ? element : getEndPointUrl() + '/static/user/status/' + element
+                                });
+                            }
                         });
-                    });
-                }
+                    }
 
-                return {
-                    ImageViewerImages: VImages
-                };
+                    return {
+                        ImageViewerImages: VImages, isLoading: false
+                    };
+                } else {
+                    return {
+                        isLoading: false
+                    }
+                }
             } else {
                 return null;
             }
@@ -93,6 +101,7 @@ export default class CarouselComponent extends React.PureComponent {
                 }
                 this.setState({ ImageViewerImages: VImages, isLoading: false });
             }
+
         }
 
     }
@@ -139,7 +148,7 @@ export default class CarouselComponent extends React.PureComponent {
 
                 />
 
-                { this.pagination}
+                {this.pagination}
 
                 <ImageView
                     images={this.state.ImageViewerImages}

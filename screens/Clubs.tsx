@@ -25,8 +25,8 @@ export default class Clubs extends React.Component {
         this.props.navigation.navigate('SingleClub', { club_id: id });
     }
     fetchClubs = async () => {
-        // let res = await get(this, `clubs/country_clubs/${country_id}/`);
-        let res = await get(this, `clubs/?offset=` + this.state.offset);
+        let res = await get(this, `clubs/country_clubs/${this.state.country_id}?offset=0`);
+        // let res = await get(this, `clubs/?offset=` + this.state.offset);
         if (res.status) {
             this.setState({
                 // country_id: country_id,
@@ -37,10 +37,11 @@ export default class Clubs extends React.Component {
     }
 
     async componentDidMount() {
-        // let { country_id } = await this.props.route.params
-        this.props.navigation.addListener('focus', async () => {
-            this.setState({ isRefreshing: true }, () => this.fetchClubs())
-        })
+        let { country_id } = await this.props.route.params
+        this.setState({ isRefreshing: true, country_id: country_id }, () => this.fetchClubs());
+        // this.props.navigation.addListener('focus', async () => {
+        //     
+        // })
 
     }
 
@@ -51,10 +52,11 @@ export default class Clubs extends React.Component {
     }
 
     getMoreTen = async () => {
-        await this.setState({ offset: this.state.offset += 1 });
-        const res = await get(this, 'clubs/?offset=' + this.state.offset);
+        await this.setState({ offset: this.state.offset += 1, isRefreshing: true });
+        // const res = await get(this, 'clubs/?offset=' + this.state.offset);
+        let res = await get(this, `clubs/country_clubs/${this.state.country_id}?offset=${this.state.offset}`);
         if (res.status) {
-            this.setState({ clubs: this.state.clubs.concat(res.response.clubs) });
+            this.setState({ clubs: this.state.clubs.concat(res.response.clubs), isRefreshing: false, });
         } else {
             this.setState({ isRefreshing: false, isLoading: false })
         }
@@ -62,7 +64,7 @@ export default class Clubs extends React.Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: 'white', height: '100%' }}>
+            <View style={{ flex: 1, backgroundColor: 'white', height: '100%' }}>
                 {/* <ImageHeaderScrollView
                     maxHeight={150}
                     minHeight={150}
@@ -75,12 +77,12 @@ export default class Clubs extends React.Component {
                 /> */}
 
                 <FlatList
-                    style={{ width: '100%' }}
+                    style={{ flex: 1, width: '100%' }}
                     data={this.state.clubs}
                     refreshing={this.state.isRefreshing}
                     onRefresh={() => this.onRefresh()}
                     keyExtractor={(item) => { return item.club_id; }}
-                    onEndReachedThreshold={0}
+                    onEndReachedThreshold={0.5}
                     onEndReached={this.getMoreTen}
                     renderItem={({ item }) => {
                         return (

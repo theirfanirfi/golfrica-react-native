@@ -263,7 +263,12 @@ export default class EditProfile extends Component {
 
         form.append("firstname", this.state.firstname);
         form.append("lastname", this.state.lastname);
-        form.append("bio", base64.encode(this.state.profile_description));
+
+        if (this.state.profile_description != '') {
+            form.append("bio", base64.encode(this.state.profile_description));
+        }
+
+
         form.append("email", this.state.email);
         form.append("facebook", this.state.facebook);
         form.append("instagram", this.state.instagram);
@@ -394,7 +399,7 @@ export default class EditProfile extends Component {
                         placeholder='Bio/Description'
                         multiline={true}
                         maxLength={200}
-                        value={this.state.profile_description}
+                        value={this.state.profile_description == '' ? 'Default Bio' : this.state.profile_description}
                         errorStyle={{ color: 'red' }}
                         leftIcon={{ type: 'font-awesome', name: 'user-md', color: 'lightgray' }}
 
@@ -497,7 +502,7 @@ export default class EditProfile extends Component {
             return (
                 <View style={{ flex: 1, justifyContent: 'center' }}>
                     <ActivityIndicator size="large" color='green' style={{ alignSelf: 'center' }} />
-                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>Changes are being made, please wait</Text>
+                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>Please wait</Text>
                 </View>
             )
         }

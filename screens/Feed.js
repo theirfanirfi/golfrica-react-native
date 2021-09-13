@@ -171,7 +171,9 @@ export default class Feed extends React.Component {
                                         <RatingStarsComponent navigation={this.props.navigation} status={status} />
                                         <View style={styles.timeContainer}>
                                             <Image style={styles.iconData} source={{ uri: 'https://img.icons8.com/color/96/3498db/calendar.png' }} />
-                                            <Text style={styles.time}>{getTimeDifference(status.created_at)}</Text>
+                                            {status.created != null &&
+                                                <Text style={styles.time}>{getTimeDifference(status.created_at)}</Text>
+                                            }
                                         </View>
 
 

@@ -1,5 +1,5 @@
 // const endpoint = "http://thelekkihub.com/golfrica"
-const endpoint = "http://192.168.10.9:5000"
+const endpoint = "http://192.168.100.140:5000"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const getEndPointUrl = () => {
   return endpoint
